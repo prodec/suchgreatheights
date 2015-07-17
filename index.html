@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>Foo foo</title>
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLtVUTJMdQigZD69BembPWbjSQLLamyzw"></script>
+    <script type="text/javascript">
+     var connection = new WebSocket("ws://localhost:7331");
+
+     connection.onmessage = displayAltitude;
+
+     function initialize() {
+       var mapOptions = {
+         center: { lat: -34.397, lng: 150.644},
+         zoom: 8
+       };
+       var map = new google.maps.Map(document.getElementById('map-canvas'),
+                                     mapOptions);
+       google.maps.event.addListener(map, "mousemove", requestAltitude);
+     }
+
+     function requestAltitude(me) {
+       var latLng = me.latLng;
+
+       connection.send(JSON.stringify({
+         command: "fetch_altitude",
+         lat: latLng.lat(),
+         lon: latLng.lng()
+       }));
+     }
+
+     function displayAltitude(resp) {
+       var altitude = JSON.parse(resp.data).altitude;
+
+       console.log(altitude);
+     }
+
+     google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+
+  <body>
+    <div id="map-canvas" style="width: 800px; height: 800px">
+    </div>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+AllCops:
+  RunRailsCops: true
+  Include:
+    - "**/Rakefile"
+    - "**/config.ru"
+  Exclude:
+    - "Gemfile"
+    - "db/**/*"
+    - "config/**/*"
+    - "script/**/*"
+
+Style/BlockDelimiters:
+  EnforcedStyle: semantic
+
+Metrics/ClassLength:
+  Max: 300
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 100
+
+Style/NegatedWhile:
+  Enabled: false
+
+Style/NonNilCheck:
+  IncludeSemanticChanges: true
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/SymbolArray:
+  Enabled: true
+
+Style/NegatedIf:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 20  
+
+#### Linting
+
+Lint/AssignmentInCondition:
+  Enabled: false
