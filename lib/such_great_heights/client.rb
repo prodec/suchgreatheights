@@ -4,8 +4,9 @@ module SuchGreatHeights
   class Client
     include Celluloid
 
-    def initialize(connection)
+    def initialize(connection, tile)
       @connection = connection
+      @tile       = tile
 
       async.listen
     end
@@ -17,7 +18,7 @@ module SuchGreatHeights
     end
 
     def fetch_altitude(lon, lat)
-      @connection << { altitude: 1010101 }.to_json
+      @connection << { altitude: @tile.altitude(lon, lat) }.to_json
     end
 
     def execute_command(command)

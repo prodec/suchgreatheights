@@ -10,9 +10,11 @@
 
      function initialize() {
        var mapOptions = {
-         center: { lat: -34.397, lng: 150.644},
-         zoom: 8
+         center: { lat: -22.918871599138694, lng: -43.21678161621094 },
+         zoom: 12,
+         mapTypeId: google.maps.MapTypeId.TERRAIN
        };
+
        var map = new google.maps.Map(document.getElementById('map-canvas'),
                                      mapOptions);
        google.maps.event.addListener(map, "mousemove", requestAltitude);

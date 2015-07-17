@@ -8,19 +8,21 @@ module SuchGreatHeights
       super host, port, &method(:on_connection)
 
       @clients = []
+      @tile    = SrtmTile.new(File.expand_path("../../data/S23W044.hgt", __dir__))
     end
+
+    attr_reader :tile
 
     def on_connection(connection)
       connection.each_request do |request|
         if request.websocket?
           connection.detach
-          @clients << Client.new_link(request.websocket)
+          @clients << Client.new_link(request.websocket, tile)
         end
       end
     end
 
     def client_disconnected(client, _)
-      puts "GOT DISCONNECTION YO"
       @clients.delete(client)
     end
   end
