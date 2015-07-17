@@ -65,6 +65,14 @@ class SrtmTile
       end.compact
     end
   end
+
+  def to_s
+    "<<SRTM>>"
+  end
+
+  def inspect
+    "<<SRTM>>"
+  end
 end
 
 def load_tile
