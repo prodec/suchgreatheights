@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require "celluloid/autostart"
+require_relative "../lib/such_great_heights"
+
+SuchGreatHeights::Server.run
