@@ -1,0 +1,6 @@
+bundler_version: 1.10.5
+ruby_version: ruby-2.2.2
+environment:
+  "GENERATIVE_COUNT": 100
+test_pattern:
+  - spec/**_spec.rb
