@@ -1,3 +1,6 @@
+require_relative "such_great_heights/errors"
 require_relative "such_great_heights/srtm_tile"
+require_relative "such_great_heights/tile_loader"
+require_relative "such_great_heights/tile_data"
 require_relative "such_great_heights/server"
 require_relative "such_great_heights/client"
