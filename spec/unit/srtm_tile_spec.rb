@@ -4,7 +4,7 @@ describe SuchGreatHeights::SrtmTile do
   let(:loader) { class_double("TileLoader") }
   let(:filename) { "S22W043.hgt.zip" }
 
-  subject { SuchGreatHeights::SrtmTile.new(filename, tile_loader: loader) }
+  subject { SuchGreatHeights::SrtmTile.new(filename, data_loader: loader) }
 
   describe "loading" do
     it "validates tiles that are of the wrong dimensions" do
@@ -12,12 +12,12 @@ describe SuchGreatHeights::SrtmTile do
         .and_raise(SuchGreatHeights::WrongDimensionsError)
 
       expect {
-        SuchGreatHeights::SrtmTile.new(filename, tile_loader: loader)
+        SuchGreatHeights::SrtmTile.new(filename, data_loader: loader)
       }.to raise_error(SuchGreatHeights::WrongDimensionsError)
     end
   end
 
-  describe "#altitude_for" do
+  describe "querying" do
     let(:tile_data) {
       instance_double("TileData",
                       data: raw_data, filename: filename.sub(".zip", ""),
@@ -28,12 +28,22 @@ describe SuchGreatHeights::SrtmTile do
       expect(loader).to receive(:load_tile).with(filename).and_return(tile_data)
     end
 
-    generative do
-      data(:longitude) { -43 + (generate(:integer, min: 0, max: 100_000).abs / 100_000.0) }
-      data(:latitude) { -22 + (generate(:integer, min: 0, max: 100_000).abs / 100_000.0) }
+    describe "#positions" do
+      it "builds every position based on the Tile's source resolution" do
+        positions = subject.positions
+        expect(positions.size).to eq(1201**2)
+        expect(positions.all? { |p| p.x <= -42 && p.y >= -22 }).to be(true)
+      end
+    end
 
-      it "finds an altitude for a coordinate pair" do
-        expect(subject.altitude_for(longitude, latitude)).not_to be_nil
+    describe "#altitude_for" do
+      generative do
+        data(:longitude) { -43 + (generate(:integer, min: 0, max: 100_000).abs / 100_000.0) }
+        data(:latitude) { -22 + (generate(:integer, min: 0, max: 100_000).abs / 100_000.0) }
+
+        it "finds an altitude for a coordinate pair" do
+          expect(subject.altitude_for(longitude, latitude)).not_to be_nil
+        end
       end
     end
   end

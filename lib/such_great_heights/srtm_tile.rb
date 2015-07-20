@@ -2,12 +2,10 @@ module SuchGreatHeights
   Position = Struct.new(:x, :y, :z)
 
   class SrtmTile
-    include Enumerable
-
     ARCSECOND  = (1 / 3600.0) # in degrees
 
-    def initialize(zipfile, tile_loader: TileLoader)
-      tile_data = tile_loader.load_tile(zipfile)
+    def initialize(zipfile, data_loader: TileDataLoader)
+      tile_data = data_loader.load_tile(zipfile)
       @filename = tile_data.filename
       @side     = tile_data.square_side
       @data     = tile_data.data
@@ -25,12 +23,12 @@ module SuchGreatHeights
       data[row][col]
     end
 
-    def each
-      data.each.with_index do |row, i|
-        row.each.with_index do |alt, j|
+    def positions
+      data.flat_map.with_index do |row, i|
+        row.map.with_index do |alt, j|
           lon, lat = lon_lat_from_cell(i, j)
 
-          yield Position.new(lon, lat, alt)
+          Position.new(lon, lat, alt)
         end
       end
     end
