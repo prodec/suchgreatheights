@@ -8,7 +8,7 @@ module SuchGreatHeights
       super host, port, &method(:on_connection)
 
       @clients = []
-      @tile    = SrtmTile.new(File.expand_path("../../data/S23W044.hgt.zip", __dir__))
+      @tile    = Service.new(File.expand_path("../../data/original/South_America", __dir__))
     end
 
     attr_reader :tile
