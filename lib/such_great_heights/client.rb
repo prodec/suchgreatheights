@@ -18,7 +18,7 @@ module SuchGreatHeights
     end
 
     def fetch_altitude(lon, lat)
-      @connection << { altitude: @tile.altitude(lon, lat) }.to_json
+      @connection << { altitude: @tile.altitude_for(lon, lat) }.to_json
     end
 
     def execute_command(command)
