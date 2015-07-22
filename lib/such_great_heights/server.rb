@@ -8,7 +8,7 @@ module SuchGreatHeights
       super host, port, &method(:on_connection)
 
       @clients = []
-      @tile    = Service.new(File.expand_path("../../data/original/South_America", __dir__))
+      @tile    = Service.new(File.expand_path("../../data/original/dds.cr.usgs.gov/srtm/version2_1/SRTM3/South_America", __dir__))
     end
 
     attr_reader :tile

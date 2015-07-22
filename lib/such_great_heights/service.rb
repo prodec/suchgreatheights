@@ -15,6 +15,10 @@ module SuchGreatHeights
       tile(lon, lat).altitude_for(lon, lat)
     end
 
+    def route_profile(route)
+      route.points.map { |p| altitude_for(p.x, p.y) }
+    end
+
     private
 
     def tile(lon, lat)

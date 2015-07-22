@@ -1,15 +1,19 @@
 require "celluloid"
+require "rgeo-geojson"
 
 module SuchGreatHeights
   class Client
     include Celluloid
 
-    def initialize(connection, tile)
+    def initialize(connection, service)
       @connection = connection
-      @tile       = tile
+      @service    = service
 
       async.listen
     end
+
+    attr_reader :service, :connection
+    private :service, :connection
 
     def listen
       loop do
@@ -17,18 +21,25 @@ module SuchGreatHeights
       end
     end
 
-    def fetch_altitude(lon, lat)
-      @connection << { altitude: @tile.altitude_for(lon, lat) }.to_json
+    def point_altitude(lon, lat)
+      connection << { altitude: service.altitude_for(lon, lat) }.to_json
+    end
+
+    def route_profile(route)
+      connection << { profile: service.route_profile(route) }.to_json
     end
 
     def execute_command(command)
-      return if command["command"] != "fetch_altitude"
-
-      @connection << fetch_altitude(command["lon"], command["lat"]).to_json
+      case command["command"]
+      when "point_altitude"
+        point_altitude(command["lon"], command["lat"])
+      when "route_profile"
+        route_profile(RGeo::GeoJSON.decode(command["route"]))
+      end
     end
 
     def next_command
-      JSON.parse(@connection.read)
+      JSON.parse(connection.read)
     rescue JSON::ParserError
       {}
     end
