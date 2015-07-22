@@ -7,56 +7,49 @@ module SuchGreatHeights
 
     include SrtmConversions
 
-    def initialize(zipfile, temp_dir)
+    def initialize(zipfile)
       @zipfile  = zipfile
       @filename = File.basename(zipfile.sub(".zip", ""))
-      @tempfile = SecureRandom.hex(16) + "-" + filename
-      @temp_dir = temp_dir
     end
 
-    attr_reader :filename, :tempfile, :temp_dir, :square_side, :zipfile
-    private :filename, :tempfile, :temp_dir, :square_side, :zipfile
+    attr_reader :filename, :tempfile, :square_side, :zipfile
+    private :filename, :tempfile, :square_side, :zipfile
 
     def load
       with_unzipped_file do |uzf|
-        square_side = Math.sqrt(File.size(uzf) / 2).to_i
+        square_side = Math.sqrt(uzf.length / 2).to_i
 
         fail WrongDimensionsError if square_side != SRTM1_SIDE && square_side != SRTM3_SIDE
 
         lon, lat = tile_to_lon_lat(filename)
-        TileData.new(filename, lat, lon, square_side, read_data(square_side))
+        TileData.new(filename, lat, lon, square_side, read_data(uzf, square_side))
       end
     end
 
-    def self.load_tile(zipfile, temp_dir = Dir.tmpdir)
-      new(zipfile, temp_dir).load
+    def self.load_tile(zipfile)
+      new(zipfile).load
     end
 
     private
 
     def with_unzipped_file
       Zip::File.open(zipfile) do |zip|
-        zip.extract(filename, unzipped_file)
+        entry = if zip.find_entry(filename)
+                  filename
+                else
+                  filename.downcase
+                end
 
-        yield unzipped_file
+        yield zip.read(entry)
       end
-    ensure
-      File.unlink(unzipped_file) if File.exist?(unzipped_file)
     end
 
-    def unzipped_file
-      File.join(temp_dir, tempfile)
-    end
-
-    def read_data(square_side)
-      File.open(unzipped_file, "rb") do |f|
-        buffer = ""
-
-        square_side.times.map {
-          f.read(CHUNK_SIZE * square_side, buffer)
-          buffer.unpack("#{PACKING}*")
-        }.compact
-      end
+    def read_data(contents, square_side)
+      square_side.times.map { |i|
+        offset = CHUNK_SIZE * square_side
+        buffer = contents[i * offset, offset]
+        buffer.unpack("#{PACKING}*")
+      }
     end
   end
 end
