@@ -1,4 +1,5 @@
 require "reel"
+require "yaml"
 
 module SuchGreatHeights
   class Server < Reel::Server::HTTP
@@ -8,10 +9,13 @@ module SuchGreatHeights
       super host, port, &method(:on_connection)
 
       @clients = []
-      @tile    = Service.new(File.expand_path("../../data/original/dds.cr.usgs.gov/srtm/version2_1/SRTM3/South_America", __dir__))
+      @tile    = Service.new(tile_set_path)
     end
 
     attr_reader :tile
+    private :tile
+
+    private
 
     def on_connection(connection)
       connection.each_request do |request|
@@ -24,6 +28,17 @@ module SuchGreatHeights
 
     def client_disconnected(client, _)
       @clients.delete(client)
+    end
+
+    def tile_set_path
+      YAML.load(config_file)["tile_set_path"]
+    end
+
+    def config_file
+      path = File.expand_path("../../config/suchgreatheights.yml", __dir__)
+      fail "A configuration file is missing. Check the documentation." if !File.exist?(path)
+
+      path
     end
   end
 end

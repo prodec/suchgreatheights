@@ -8,6 +8,7 @@ gem "rgeo-geojson", "~> 0.3.1"
 
 group :development do
   gem "pry", "~> 0.10.1"
+  gem "rake"
 end
 
 group :development, :test do
