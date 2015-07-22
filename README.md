@@ -9,8 +9,8 @@ Há dois pontos de entrada, apenas:
 
 ## Rodando
 
-$ bundle install
-$ bin/server
+    $ bundle install
+    $ bin/server
 
 O serviço abrirá na porta 7331, e responderá apenas por WebSocket.
 
@@ -32,4 +32,4 @@ Caso tenhamos problemas com isto, podemos partir para duas abordagens diferentes
 
 
 [srtm]: http://www2.jpl.nasa.gov/srtm/
-[trailblazer]: https://github.com/prodec/trail-blazer
+[trail-blazer]: https://github.com/prodec/trail-blazer
