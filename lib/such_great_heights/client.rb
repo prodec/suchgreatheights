@@ -22,11 +22,11 @@ module SuchGreatHeights
     end
 
     def point_altitude(lon, lat)
-      connection << { altitude: service.altitude_for(lon, lat) }.to_json
+      connection << service.altitude_for(lon, lat).to_json
     end
 
     def route_profile(route)
-      connection << { profile: service.route_profile(route) }.to_json
+      connection << service.route_profile(route).to_json
     end
 
     def execute_command(command)

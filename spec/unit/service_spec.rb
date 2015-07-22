@@ -26,7 +26,7 @@ describe SuchGreatHeights::Service do
         expect(tile).to receive(:altitude_for).with(longitude, latitude)
           .and_return(altitude)
 
-        expect(subject.altitude_for(longitude, latitude)).to eq(altitude)
+        expect(subject.altitude_for(longitude, latitude).altitude).to eq(altitude)
       end
     end
   end

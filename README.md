@@ -12,7 +12,7 @@ Há dois pontos de entrada, apenas:
     $ bundle install
     $ bin/server
 
-O serviço abrirá na porta 7331, e responderá apenas por WebSocket.
+O serviço abrirá na porta 7331, e responderá tanto por WebSocket quanto por HTTP.
 
 ## Arquitetura atual
 
