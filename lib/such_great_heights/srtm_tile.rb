@@ -14,6 +14,8 @@ module SuchGreatHeights
     attr_reader :data, :latitude, :longitude, :side, :filename, :cell_size
 
     def altitude_for(lon, lat)
+      return NO_DATA if !lon || !lat
+
       row, col = row_and_column_for(lon, lat)
 
       fail OutOfBoundsError if row < 0 || col < 0
