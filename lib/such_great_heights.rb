@@ -13,4 +13,5 @@ module SuchGreatHeights
   SRTM1_SIDE = 3601
   SRTM3_SIDE = 1201
   NO_DATA    = -32_768
+  ARCSECOND  = (1 / 3600.0) # in degrees
 end

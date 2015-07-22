@@ -2,8 +2,6 @@ module SuchGreatHeights
   Position = Struct.new(:x, :y, :z)
 
   class SrtmTile
-    ARCSECOND  = (1 / 3600.0) # in degrees
-
     def initialize(zipfile, data_loader: TileDataLoader)
       tile_data = data_loader.load_tile(zipfile)
       @filename = tile_data.filename
