@@ -12,11 +12,15 @@ module SuchGreatHeights
     private :tree, :tile_cache, :tile_loader
 
     def altitude_for(lon, lat)
-      tile(lon, lat).altitude_for(lon, lat)
+      altitude = tile(lon, lat).altitude_for(lon, lat)
+
+      AltitudeResponse.new(altitude)
     end
 
     def route_profile(route)
-      route.points.map { |p| altitude_for(p.x, p.y) }
+      coordinates = route.fetch("coordinates")
+
+      ProfileResponse.new(Array(coordinates).map { |p| altitude_for(p[0], p[1]) })
     end
 
     private
