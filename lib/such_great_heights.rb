@@ -9,6 +9,7 @@ require_relative "such_great_heights/service"
 require_relative "such_great_heights/http_handler"
 require_relative "such_great_heights/altitude_response"
 require_relative "such_great_heights/profile_response"
+require_relative "such_great_heights/tile_cache"
 
 require_relative "such_great_heights/server"
 require_relative "such_great_heights/client"
