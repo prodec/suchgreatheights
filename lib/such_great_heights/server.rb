@@ -9,7 +9,7 @@ module SuchGreatHeights
       super host, port, &method(:on_connection)
 
       @clients = []
-      @service = Service.new(tile_set_path)
+      @service = Service.new_link(tile_set_path)
     end
 
     attr_reader :service
