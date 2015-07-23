@@ -18,7 +18,9 @@ module SuchGreatHeights
     end
 
     def route_profile(route)
-      ProfileResponse.new(Array(route).points.map { |p| altitude_for(p.x, p.y) })
+      coordinates = route.fetch("coordinates")
+
+      ProfileResponse.new(Array(coordinates).map { |p| altitude_for(p[0], p[1]) })
     end
 
     private
