@@ -1,5 +1,4 @@
 require "celluloid"
-require "rgeo-geojson"
 
 module SuchGreatHeights
   class Client
@@ -34,7 +33,7 @@ module SuchGreatHeights
       when "point_altitude"
         point_altitude(command["lon"], command["lat"])
       when "route_profile"
-        route_profile(RGeo::GeoJSON.decode(command["route"]))
+        route_profile(command["route"])
       end
     end
 

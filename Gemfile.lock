@@ -53,6 +53,7 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.0.2)
     ffi (1.9.10)
+    ffi (1.9.10-java)
     formatador (0.2.5)
     generative (0.2.3)
       rspec (>= 3.0)
@@ -71,6 +72,7 @@ GEM
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
     hitimes (1.2.2)
+    hitimes (1.2.2-java)
     http (0.8.12)
       addressable (~> 2.3)
       http-cookie (~> 1.0)
@@ -80,6 +82,7 @@ GEM
       domain_name (~> 0.5)
     http-form_data (1.0.1)
     http_parser.rb (0.6.0)
+    http_parser.rb (0.6.0-java)
     listen (3.0.2)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
@@ -87,6 +90,7 @@ GEM
     method_source (0.8.2)
     nenv (0.2.0)
     nio4r (1.1.0)
+    nio4r (1.1.0-java)
     notiffany (0.0.6)
       nenv (~> 0.1)
       shellany (~> 0.0)
@@ -94,6 +98,11 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    pry (0.10.1-java)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+      spoon (~> 0.0)
     rake (10.4.2)
     rb-fsevent (0.9.5)
     rb-inotify (0.9.5)
@@ -104,9 +113,6 @@ GEM
       http (>= 0.6.0.pre)
       http_parser.rb (>= 0.6.0)
       websocket_parser (>= 0.1.6)
-    rgeo (0.3.20)
-    rgeo-geojson (0.3.1)
-      rgeo (~> 0.3)
     rspec (3.3.0)
       rspec-core (~> 3.3.0)
       rspec-expectations (~> 3.3.0)
@@ -124,15 +130,19 @@ GEM
     rubyzip (1.1.7)
     shellany (0.0.1)
     slop (3.6.0)
+    spoon (0.0.4)
+      ffi
     thor (0.19.1)
     timers (4.0.1)
       hitimes
     unf (0.1.4)
       unf_ext
+    unf (0.1.4-java)
     unf_ext (0.0.7.1)
     websocket_parser (1.0.0)
 
 PLATFORMS
+  java
   ruby
 
 DEPENDENCIES
@@ -143,10 +153,8 @@ DEPENDENCIES
   pry (~> 0.10.1)
   rake
   reel (~> 0.5.0)
-  rgeo (~> 0.3.20)
-  rgeo-geojson (~> 0.3.1)
   rspec (~> 3.3.0)
   rubyzip (~> 1.1.7)
 
 BUNDLED WITH
-   1.10.5
+   1.10.6
