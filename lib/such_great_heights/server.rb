@@ -9,7 +9,8 @@ module SuchGreatHeights
       super host, port, &method(:on_connection)
 
       @clients = []
-      @service = Service.new_link(tile_set_path)
+      @service = Service.new_link(configuration.tile_set_path,
+                                  configuration.tile_duration)
     end
 
     attr_reader :service
@@ -36,15 +37,8 @@ module SuchGreatHeights
       @clients.delete(client)
     end
 
-    def tile_set_path
-      YAML.load(open(config_file)).fetch("tile_set_path")
-    end
-
-    def config_file
-      path = File.expand_path("../../config/suchgreatheights.yml", __dir__)
-      fail "A configuration file is missing. Check the documentation" if !File.exist?(path)
-
-      path
+    def configuration
+      @configuration ||= Configuration.load_from_file
     end
   end
 end

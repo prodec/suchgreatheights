@@ -5,8 +5,9 @@ describe SuchGreatHeights::Service do
 
   let(:cache) { class_double("TileCache") }
   let(:tile_set) { "/path/to/set" }
+  let(:tile_duration) { 2.0 }
 
-  subject { SuchGreatHeights::Service.new(tile_set, tile_cache: cache) }
+  subject { SuchGreatHeights::Service.new(tile_set, tile_duration, tile_cache: cache) }
 
   describe "#altitude_for" do
     let(:tile) { instance_double("Tile") }
@@ -14,7 +15,7 @@ describe SuchGreatHeights::Service do
     let(:latitude) { -21.123123 }
 
     before do
-      expect(cache).to receive(:new_link).with(tile_set).and_return(cache)
+      expect(cache).to receive(:new_link).with(tile_set, tile_duration).and_return(cache)
     end
 
     generative do

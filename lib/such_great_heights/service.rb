@@ -4,8 +4,8 @@ module SuchGreatHeights
   class Service
     include Celluloid
 
-    def initialize(tile_set, tile_cache: TileCache)
-      @tile_cache = tile_cache.new_link(tile_set)
+    def initialize(tile_set, tile_duration, tile_cache: TileCache)
+      @tile_cache = tile_cache.new_link(tile_set, tile_duration)
     end
 
     attr_reader :tile_cache

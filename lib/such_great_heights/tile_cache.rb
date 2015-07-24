@@ -3,9 +3,7 @@ module SuchGreatHeights
     include SrtmConversions
     include Celluloid
 
-    TILE_DURATION = 6 * 60 * 60
-
-    def initialize(tile_set, tile_duration: TILE_DURATION, tile_loader: TileLoader)
+    def initialize(tile_set, tile_duration, tile_loader: TileLoader)
       @tile_set      = tile_set
       @loader        = tile_loader
       @cache         = {}
