@@ -1,3 +1,5 @@
+require "yaml"
+
 module SuchGreatHeights
   class Configuration
     def initialize(tile_set_path, tile_duration)
@@ -6,6 +8,10 @@ module SuchGreatHeights
     end
 
     attr_reader :tile_set_path, :tile_duration
+
+    def self.current
+      @configuration ||= load_from_file
+    end
 
     def self.load_from_file
       config = YAML.load(open(configuration_path))

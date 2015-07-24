@@ -11,7 +11,8 @@ describe SuchGreatHeights::TileCache do
   include SuchGreatHeights::SrtmConversions
 
   subject {
-    SuchGreatHeights::TileCache.new(tile_set, duration, tile_loader: loader)
+    SuchGreatHeights::TileCache.new(tile_set: tile_set, tile_duration: duration,
+                                    tile_loader: loader)
   }
 
   describe "#fetch" do

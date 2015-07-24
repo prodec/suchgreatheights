@@ -3,7 +3,11 @@ module SuchGreatHeights
     include SrtmConversions
     include Celluloid
 
-    def initialize(tile_set, tile_duration, tile_loader: TileLoader)
+    FROM_CONFIG = ->(key) { Configuration.current.public_send(key) }
+
+    def initialize(tile_set: FROM_CONFIG[:tile_set_path],
+                   tile_duration: FROM_CONFIG[:tile_duration],
+                   tile_loader: TileLoader)
       @tile_set      = tile_set
       @loader        = tile_loader
       @cache         = {}
