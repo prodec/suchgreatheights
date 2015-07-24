@@ -9,8 +9,8 @@ module SuchGreatHeights
       super host, port, &method(:on_connection)
 
       @clients = []
-      @service = Service.new_link(configuration.tile_set_path,
-                                  configuration.tile_duration)
+
+      ServiceSupervisionGroup.run!
     end
 
     attr_reader :service
@@ -22,7 +22,8 @@ module SuchGreatHeights
       connection.each_request do |request|
         if request.websocket?
           connection.detach
-          @clients << Client.new_link(request.websocket, service)
+          @clients << Client.new_link(request.websocket,
+                                      Celluloid::Actor[:service])
         else
           handle_request(request)
         end
@@ -35,10 +36,6 @@ module SuchGreatHeights
 
     def client_disconnected(client, _)
       @clients.delete(client)
-    end
-
-    def configuration
-      @configuration ||= Configuration.load_from_file
     end
   end
 end
