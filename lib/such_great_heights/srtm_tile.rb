@@ -33,6 +33,14 @@ module SuchGreatHeights
       end
     end
 
+    def to_s
+      "<<SRTM>>"
+    end
+
+    def inspect
+      "<<SRTM>>"
+    end
+
     private
 
     def row_and_column_for(lon, lat)
@@ -49,14 +57,6 @@ module SuchGreatHeights
 
     def cell_size
       side == SRTM3_SIDE ? 3 : 1
-    end
-
-    def to_s
-      "<<SRTM>>"
-    end
-
-    def inspect
-      "<<SRTM>>"
     end
   end
 end
