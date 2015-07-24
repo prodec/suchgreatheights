@@ -1,3 +1,4 @@
+require_relative "such_great_heights/configuration"
 require_relative "such_great_heights/errors"
 require_relative "such_great_heights/srtm_conversions"
 require_relative "such_great_heights/srtm_tile"
@@ -9,6 +10,7 @@ require_relative "such_great_heights/service"
 require_relative "such_great_heights/http_handler"
 require_relative "such_great_heights/altitude_response"
 require_relative "such_great_heights/profile_response"
+require_relative "such_great_heights/tile_cache"
 
 require_relative "such_great_heights/server"
 require_relative "such_great_heights/client"
@@ -18,4 +20,5 @@ module SuchGreatHeights
   SRTM3_SIDE = 1201
   NO_DATA    = -32_768
   ARCSECOND  = (1 / 3600.0) # in degrees
+  DEFAULT_TILE_DURATION = 6 * 60 * 60 # hours in seconds
 end

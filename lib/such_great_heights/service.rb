@@ -1,15 +1,15 @@
+require "celluloid"
+
 module SuchGreatHeights
   class Service
-    include SrtmConversions
+    include Celluloid
 
-    def initialize(tile_set, tile_loader: TileLoader)
-      @tile_set   = tile_set
-      @tile_cache = {}
-      @tile_loader = tile_loader
+    def initialize(tile_set, tile_duration, tile_cache: TileCache)
+      @tile_cache = tile_cache.new_link(tile_set, tile_duration)
     end
 
-    attr_reader :tree, :tile_cache, :tile_set, :tile_loader
-    private :tree, :tile_cache, :tile_loader
+    attr_reader :tile_cache
+    private :tile_cache
 
     def altitude_for(lon, lat)
       altitude = tile(lon, lat).altitude_for(lon, lat)
@@ -26,12 +26,7 @@ module SuchGreatHeights
     private
 
     def tile(lon, lat)
-      tn = lon_lat_to_tile(lon, lat)
-      tile_cache.fetch(tn) { tile_cache[tn] = load_tile(tn) }
-    end
-
-    def load_tile(tile_name)
-      tile_loader.load(File.join(tile_set, tile_name))
+      tile_cache.fetch(lon, lat)
     end
   end
 end
