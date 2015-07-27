@@ -8,6 +8,7 @@ end
 
 require_relative "such_great_heights/configuration"
 require_relative "such_great_heights/errors"
+require_relative "such_great_heights/geometry"
 require_relative "such_great_heights/srtm_conversions"
 require_relative "such_great_heights/srtm_tile"
 require_relative "such_great_heights/null_tile"
