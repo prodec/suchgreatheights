@@ -3,6 +3,7 @@ source "https://rubygems.org"
 gem "celluloid", "~> 0.17.0"
 gem "reel", "~> 0.5.0"
 gem "rubyzip", "~> 1.1.7"
+gem "rgeo", "~> 0.3.20"
 
 group :development do
   gem "pry", "~> 0.10.1"

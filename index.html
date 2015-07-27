@@ -17,12 +17,10 @@
     <script type="text/javascript">
      var connection = new WebSocket("ws://localhost:7331");
      var lineString = [
-       [-41.3188296812307, -21.22213463144414],
-       [-41.31501021559472, -21.232615568711125],
-       [-41.309559966876584, -21.234655664558364],
-       [-41.31131949599052, -21.239615779853402],
-       [-41.3005048292442, -21.25001547973732]
+       [-41.123, -21.456],
+       [-42.123, -22.456]
      ];
+     var map;
 
      connection.onmessage = dispatch;
 
@@ -33,7 +31,7 @@
          mapTypeId: google.maps.MapTypeId.TERRAIN
        };
 
-       var map = new google.maps.Map(document.getElementById('map-canvas'),
+       map = new google.maps.Map(document.getElementById('map-canvas'),
                                      mapOptions);
        google.maps.event.addListener(map, "mousemove", requestAltitude);
 
@@ -78,8 +76,16 @@
      }
 
      function displayRoute(resp) {
-       console.log(resp);
-       // document.getElementById("current-altitude").innerText = altitude;
+       var path = new google.maps.Polyline({
+         path: resp.profile.map(function(p) {
+         return new google.maps.LatLng(p[1], p[0]);
+         }),
+         geodesic: true,
+         strokeColor: "#0000FF",
+         strokeWeight: 3
+       });
+
+       path.setMap(map);
      }
 
      google.maps.event.addDomListener(window, 'load', initialize);
