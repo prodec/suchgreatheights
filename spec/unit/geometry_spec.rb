@@ -7,6 +7,7 @@ describe SuchGreatHeights::Geometry do
     let(:factory) {
       RGeo::Geographic.simple_mercator_factory
     }
+    let(:acceptable_distance) { 0.0000001 }
 
     generative do
       # This is range limited because of some corrections RGeo applies
@@ -18,9 +19,7 @@ describe SuchGreatHeights::Geometry do
         ls0 = factory.line_string(route.map { |x, y| factory.point(x, y) })
         interpolated = G.interpolate_route(route)
         ps = interpolated.map { |x, y| factory.point(x, y) }
-        all_on_line = ps.all? { |p| p.distance(ls0) == 0.0 }
-
-        require "pry"; binding.pry if !all_on_line
+        all_on_line = ps.all? { |p| p.distance(ls0) < acceptable_distance }
 
         expect(all_on_line).to be(true)
       end
