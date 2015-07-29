@@ -52,14 +52,37 @@ module SuchGreatHeights
     #
     # @return [Array<Pair<Float,Float>>] a new LineString segment
     def add_extra_points(p0, p1, min_res)
-      n = points_to_add_between(p0, p1, min_res)
+      n  = points_to_add_between(p0, p1, min_res)
+      dir = direction(p0, p1)
 
-      between = (0..n).map { |i|
-        [p0[0] + ((p1[0] - p0[0]) / (n + 1) * (i + 1)),
-         p0[1] + ((p1[1] - p0[1]) / (n + 1) * (i + 1))]
-      }
+      (0..n).map { |offset|
+        offset_point(p0, dir, min_res * offset)
+      } + [p1]
+    end
 
-      [p0, *between, p1]
+    def direction(p0, p1)
+      wmp0 = point_to_webmercator(p0)
+      wmp1 = point_to_webmercator(p1)
+      vec  = [wmp1.x - wmp0.x, wmp1.y - wmp0.y]
+      norm = Math.sqrt(vec[0]**2 + vec[1]**2)
+
+      [vec[0] / norm, vec[1] / norm]
+    end
+
+    def point_to_webmercator(point)
+      factory.point(*point).projection
+    end
+
+    def offset_point(point, dir, offset_kms)
+      wmp   = point_to_webmercator(point)
+      wmfac = wmp.factory
+      proj  = wmfac.point(
+        wmp.x + (dir[0] * offset_kms * 1000),
+        wmp.y + (dir[1] * offset_kms * 1000)
+      )
+
+      ll = factory.unproject(proj)
+      [ll.x, ll.y]
     end
 
     # Determines how many extra points should be added in a LineString
@@ -80,6 +103,7 @@ module SuchGreatHeights
     end
 
     module_function :line_length, :distance, :interpolate_route, :factory,
-                    :add_extra_points, :points_to_add_between
+                    :add_extra_points, :points_to_add_between, :direction,
+                    :offset_point, :point_to_webmercator
   end
 end
