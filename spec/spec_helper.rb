@@ -19,7 +19,7 @@ LongitudeGenerator = CoordinateGenerator.call(-180, 180)
 LatitudeGenerator  = CoordinateGenerator.call(-90, 90)
 
 CoordinatePairGenerator = lambda { |opts = {}|
-  [
+  SuchGreatHeights::Vector.new(
     Generative.generate(:longitude,
                         min: opts[:longitude_min],
                         max: opts[:longitude_max],
@@ -27,7 +27,8 @@ CoordinatePairGenerator = lambda { |opts = {}|
     Generative.generate(:latitude,
                         min: opts[:latitude_min],
                         max: opts[:latitude_max],
-                        base: opts[:latitude_base])]
+                        base: opts[:latitude_base])
+  )
 }
 
 RouteGenerator = lambda { |opts = {}|

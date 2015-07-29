@@ -16,7 +16,7 @@ module SuchGreatHeights
     end
 
     def route_profile(route)
-      coordinates = Geometry.interpolate_route(route.fetch("coordinates"))
+      coordinates = Geometry.interpolate_route(as_vertices(route.fetch("coordinates")))
 
       ProfileResponse.new(Array(coordinates).map { |p|
                             Point.new(p[0], p[1], altitude(p[0], p[1]))
@@ -31,6 +31,10 @@ module SuchGreatHeights
 
     def tile(lon, lat)
       tile_cache.fetch(lon, lat)
+    end
+
+    def as_vertices(coords)
+      coords.map { |c| Vector.new(*c) }
     end
   end
 end
