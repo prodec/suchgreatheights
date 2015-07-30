@@ -12,21 +12,29 @@ module SuchGreatHeights
     private :tile_cache
 
     def altitude_for(lon, lat)
-      altitude = tile(lon, lat).altitude_for(lon, lat)
-
-      AltitudeResponse.new(altitude)
+      AltitudeResponse.new(altitude(lon, lat))
     end
 
     def route_profile(route)
-      coordinates = route.fetch("coordinates")
+      coordinates = Geometry.interpolate_route(as_vertices(route.fetch("coordinates")))
 
-      ProfileResponse.new(Array(coordinates).map { |p| altitude_for(p[0], p[1]) })
+      ProfileResponse.new(Array(coordinates).map { |p|
+                            Point.new(p[0], p[1], altitude(p[0], p[1]))
+                          })
     end
 
     private
 
+    def altitude(lon, lat)
+      tile(lon, lat).altitude_for(lon, lat)
+    end
+
     def tile(lon, lat)
       tile_cache.fetch(lon, lat)
+    end
+
+    def as_vertices(coords)
+      coords.map { |c| Vector.new(*c) }
     end
   end
 end

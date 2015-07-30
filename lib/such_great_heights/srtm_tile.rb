@@ -1,17 +1,16 @@
+require "forwardable"
+
 module SuchGreatHeights
   Position = Struct.new(:x, :y, :z)
 
   class SrtmTile
+    extend Forwardable
+
     def initialize(zipfile, data_loader: TileDataLoader)
-      tile_data = data_loader.load_tile(zipfile)
-      @filename = tile_data.filename
-      @side     = tile_data.square_side
-      @data     = tile_data.data
-      @latitude = tile_data.latitude
-      @longitude = tile_data.longitude
+      @tile_data = data_loader.load_tile(zipfile)
     end
 
-    attr_reader :data, :latitude, :longitude, :side, :filename, :cell_size
+    def_delegators :@tile_data, :data, :latitude, :longitude, :filename, :square_side
 
     def altitude_for(lon, lat)
       return NO_DATA if !lon || !lat
@@ -44,8 +43,8 @@ module SuchGreatHeights
     private
 
     def row_and_column_for(lon, lat)
-      [((latitude + 1 - lat) * (side - 1).to_f).floor,
-       ((lon - longitude) * (side - 1).to_f).floor]
+      [((latitude + 1 - lat) * (square_side - 1).to_f).floor,
+       ((lon - longitude) * (square_side - 1).to_f).floor]
     end
 
     def lon_lat_from_cell(r, c)
@@ -56,7 +55,7 @@ module SuchGreatHeights
     end
 
     def cell_size
-      side == SRTM3_SIDE ? 3 : 1
+      square_side == SRTM3_SIDE ? 3 : 1
     end
   end
 end

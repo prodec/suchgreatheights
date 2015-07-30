@@ -38,8 +38,8 @@ describe SuchGreatHeights::SrtmTile do
 
     describe "#altitude_for" do
       generative do
-        data(:longitude) { -43 + (generate(:integer, min: 0, max: 100_000).abs / 100_000.0) }
-        data(:latitude) { -22 + (generate(:integer, min: 0, max: 100_000).abs / 100_000.0) }
+        data(:longitude) { generate(:longitude, base: -43) }
+        data(:latitude) { generate(:latitude, base: -22) }
 
         it "finds an altitude for a coordinate pair" do
           expect(subject.altitude_for(longitude, latitude)).not_to be_nil
