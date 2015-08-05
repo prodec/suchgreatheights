@@ -13,9 +13,6 @@ module SuchGreatHeights
       ServiceSupervisionGroup.run!
     end
 
-    attr_reader :service
-    private :service
-
     private
 
     def on_connection(connection)
@@ -31,7 +28,7 @@ module SuchGreatHeights
     end
 
     def handle_request(request)
-      HttpHandler.new(request, service).response
+      HttpHandler.new(request, Celluloid::Actor[:service]).response
     end
 
     def client_disconnected(client, _)
