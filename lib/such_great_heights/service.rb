@@ -19,7 +19,7 @@ module SuchGreatHeights
       coordinates = Geometry.interpolate_route(as_vertices(route.fetch("coordinates")))
 
       ProfileResponse.new(Array(coordinates).map { |p|
-                            Point.new(p[0], p[1], altitude(p[0], p[1]))
+                            Point.new(p.x, p.y, altitude(p.x, p.y))
                           })
     end
 
