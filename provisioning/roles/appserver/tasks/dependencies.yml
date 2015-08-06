@@ -1,0 +1,23 @@
+- name: "Install native dependencies"
+  action: apt pkg={{item}} state=installed
+  with_items:
+    - build-essential
+    - automake
+    - bison
+    - autoconf
+    - pkg-config
+    - libreadline6
+    - libreadline6-dev
+    - openssl
+    - libssl-dev
+    - curl
+    - git-core
+    - subversion
+    - zlib1g
+    - zlib1g-dev
+    - libyaml-dev
+    - libxml2-dev
+    - libxslt1-dev
+    - curl
+    - libproj-dev
+    - libgeos-dev

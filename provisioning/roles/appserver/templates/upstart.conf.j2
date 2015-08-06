@@ -1,0 +1,26 @@
+# /etc/init/suchgreatheights.conf - suchgreatheights config
+
+description "Sidekiq Background Worker"
+
+# This script is not meant to start on bootup, workers.conf
+# will start all sidekiq instances explicitly when it starts.
+start on runlevel [2345]
+stop on runlevel [06]
+
+setuid deploy
+setgid deploy
+env HOME=/home/deploy
+
+respawn
+respawn limit 3 30
+
+normal exit 0 TERM
+
+reload signal USR1
+
+script
+exec /bin/bash <<'EOT'
+  cd {{deploy_directory}}/current
+  exec bundle exec bin/server
+EOT
+end script

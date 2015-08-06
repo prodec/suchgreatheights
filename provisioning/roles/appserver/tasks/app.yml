@@ -1,0 +1,53 @@
+- name: Create deployment user
+  user: name=deploy comment="Application deployment user"
+
+- name: Create deployment directory
+  file: path={{deploy_directory}} owner=deploy group=deploy state=directory
+
+- name: Create shared directory
+  file: path="{{deploy_directory}}/shared" owner=deploy group=deploy state=directory
+
+- name: Create log directory
+  file: path="{{log_path}}" owner=deploy group=deploy state=directory
+
+- name: Touch log file
+  file: path="{{log_file}}" owner=deploy group=deploy state=touch
+
+- name: Create config directory
+  file: path="{{deploy_directory}}/shared/config" owner=deploy group=deploy state=directory
+
+- name: Clone repo
+  git: repo=git@github.com:prodec/suchgreatheights.git
+       dest="{{deploy_directory}}/current"
+       version=master
+
+- name: Fix permissions
+  file: path={{deploy_directory}} owner=deploy group=deploy state=directory recurse=yes
+
+- name: Install bundler
+  shell: gem install bundler
+
+- name: Install the app's bundle
+  shell: bundle install --path vendor/bundle
+  args:
+    chdir: "{{deploy_directory}}/current"
+  become: yes
+  become_user: deploy
+
+- name: Copy configuration
+  template: src=config.yml.j2 dest="{{config_path}}/suchgreatheights.yml" group=www-data owner=www-data force=yes
+
+- name: Link config file
+  file: src="{{shared_directory}}/config/suchgreatheights.yml" dest="{{deploy_directory}}/current/config/suchgreatheights.yml" state=link
+
+- name: Link log file
+  file: src="{{log_file}}" dest="{{deploy_directory}}/current/log/suchgreatheights.log" state=link
+  
+- name: Copy upstart file
+  template: src=upstart.conf.j2 dest=/etc/init/{{app_name}}.conf force=yes
+
+- name: Restart service
+  service: name={{app_name}} state=restarted
+
+- name: Enable service at boot
+  service: name={{app_name}} enabled=yes
