@@ -4,21 +4,21 @@ require "degenerate"
 
 require_relative "../lib/such_great_heights"
 
-CoordinateGenerator = lambda { |min, max|
-  lambda { |opts = {}|
+CoordinateGenerator = lambda do |min, max|
+  lambda do |opts = {}|
     int  = opts[:base] ||
            Generative.generate(:integer, min: opts[:min] || min,
                                          max: opts[:max] || max)
     frac = Generative.generate(:integer, min: 0, max: 100_000).abs / 100_000.0
 
     int + (opts[:decrease] ? -frac : frac)
-  }
-}
+  end
+end
 
 LongitudeGenerator = CoordinateGenerator.call(-180, 180)
 LatitudeGenerator  = CoordinateGenerator.call(-90, 90)
 
-CoordinatePairGenerator = lambda { |opts = {}|
+CoordinatePairGenerator = lambda do |opts = {}|
   SuchGreatHeights::Vector.new(
     Generative.generate(:longitude,
                         min: opts[:longitude_min],
@@ -29,13 +29,13 @@ CoordinatePairGenerator = lambda { |opts = {}|
                         max: opts[:latitude_max],
                         base: opts[:latitude_base])
   )
-}
+end
 
-RouteGenerator = lambda { |opts = {}|
-  Array.new((Generative.generate(:integer, min: 10, max: 100))) {
+RouteGenerator = lambda do |opts = {}|
+  Array.new((Generative.generate(:integer, min: 10, max: 100))) do
     Generative.generate(:coordinate_pair, opts)
-  }
-}
+  end
+end
 
 Generative.register_generator(:longitude, LongitudeGenerator)
 Generative.register_generator(:latitude, LatitudeGenerator)

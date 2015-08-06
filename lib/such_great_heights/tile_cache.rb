@@ -20,7 +20,7 @@ module SuchGreatHeights
 
     def fetch(lon, lat)
       tn   = lon_lat_to_tile(lon, lat)
-      tile = cache.fetch(tn) do cache[tn] = load_tile(tn) end
+      tile = cache.fetch(tn) { cache[tn] = load_tile(tn) }
 
       update_timer(tn)
 
