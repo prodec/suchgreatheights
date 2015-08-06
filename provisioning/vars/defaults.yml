@@ -1,0 +1,17 @@
+webserver_name: suchgreatheights.sigvia.com
+deploy_directory: /webapps/suchgreatheights
+shared_directory: "{{deploy_directory}}/shared"
+app_name: suchgreatheights
+
+tile_set_path: /var/lib/suchgreatheights/data
+log_path: "{{shared_directory}}/log"
+log_file: "{{log_path}}/suchgreatheights.log"
+config_path: "{{shared_directory}}/config"
+tile_duration: 21600  
+
+ruby_tmp_dir: /usr/local/src
+ruby_url: http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.2.tar.gz
+ruby_file: ruby-2.2.2.tar.gz
+ruby_name: ruby-2.2.2
+tmp_ruby_path: "{{ruby_tmp_dir}}/{{ruby_name}}"
+
