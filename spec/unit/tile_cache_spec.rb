@@ -10,10 +10,10 @@ describe SuchGreatHeights::TileCache do
 
   include SuchGreatHeights::SrtmConversions
 
-  subject {
+  subject do
     SuchGreatHeights::TileCache.new(tile_set: tile_set, tile_duration: duration,
                                     tile_loader: loader)
-  }
+  end
 
   describe "#fetch" do
     before do

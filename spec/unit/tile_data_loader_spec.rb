@@ -6,13 +6,13 @@ describe SuchGreatHeights::TileDataLoader do
 
   describe ".load_tile" do
     it "validates tile dimensions" do
-      expect {
+      expect do
         SuchGreatHeights::TileDataLoader.load_tile(valid_tile)
-      }.not_to raise_error
+      end.not_to raise_error
 
-      expect {
+      expect do
         SuchGreatHeights::TileDataLoader.load_tile(invalid_tile)
-      }.to raise_error(SuchGreatHeights::WrongDimensionsError)
+      end.to raise_error(SuchGreatHeights::WrongDimensionsError)
     end
 
     it "builds a TileData" do

@@ -4,9 +4,9 @@ describe SuchGreatHeights::Geometry do
   G = SuchGreatHeights::Geometry
 
   describe ".interpolate_route" do
-    let(:factory) {
+    let(:factory) do
       RGeo::Geographic.simple_mercator_factory
-    }
+    end
     let(:acceptable_distance) { 0.0000001 }
 
     generative do

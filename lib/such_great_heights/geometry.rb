@@ -8,9 +8,9 @@ module SuchGreatHeights
     #
     # @return [Float] length in kilometers
     def line_length(coords)
-      coords.each_cons(2).inject(0) { |dist, (a, b)|
+      coords.each_cons(2).inject(0) do |dist, (a, b)|
         dist + distance(a, b)
-      }
+      end
     end
 
     # Determines the distance between two points.
@@ -38,10 +38,10 @@ module SuchGreatHeights
       length  = line_length(coords)
       min_res = length / max_dist
 
-      coords.each_cons(2).inject([]) { |route, (a, b)|
+      coords.each_cons(2).inject([]) do |route, (a, b)|
         segment = add_extra_points(a, b, min_res)
         route + segment
-      }
+      end
     end
 
     # Adds extra points to a LineString segment, following the desired
@@ -56,9 +56,9 @@ module SuchGreatHeights
       n  = points_to_add_between(p0, p1, min_res)
       dir = direction(p0, p1)
 
-      (0..n).map { |offset|
+      (0..n).map do |offset|
         offset_point(p0, dir, min_res * offset)
-      } + [p1]
+      end + [p1]
     end
 
     def direction(p0, p1)
@@ -74,14 +74,16 @@ module SuchGreatHeights
     end
 
     def offset_point(point, dir, offset_kms)
-      wmp   = point_to_webmercator(point)
-      wmfac = wmp.factory
-      proj  = wmfac.point(
+      projected = offset_as_mercator(point, dir, offset_kms)
+      factory.unproject(projected)
+    end
+
+    def offset_as_mercator(point, dir, offset_kms)
+      wmp = point_to_webmercator(point)
+      wmp.factory.point(
         wmp.x + (dir.x * offset_kms * 1000),
         wmp.y + (dir.y * offset_kms * 1000)
       )
-
-      factory.unproject(proj)
     end
 
     # Determines how many extra points should be added in a LineString
@@ -103,6 +105,6 @@ module SuchGreatHeights
 
     module_function :line_length, :distance, :interpolate_route, :factory,
                     :add_extra_points, :points_to_add_between, :direction,
-                    :offset_point, :point_to_webmercator
+                    :offset_point, :point_to_webmercator, :offset_as_mercator
   end
 end

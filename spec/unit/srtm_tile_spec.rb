@@ -11,18 +11,18 @@ describe SuchGreatHeights::SrtmTile do
       expect(loader).to receive(:load_tile).with(filename)
         .and_raise(SuchGreatHeights::WrongDimensionsError)
 
-      expect {
+      expect do
         SuchGreatHeights::SrtmTile.new(filename, data_loader: loader)
-      }.to raise_error(SuchGreatHeights::WrongDimensionsError)
+      end.to raise_error(SuchGreatHeights::WrongDimensionsError)
     end
   end
 
   describe "querying" do
-    let(:tile_data) {
+    let(:tile_data) do
       instance_double("TileData",
                       data: raw_data, filename: filename.sub(".zip", ""),
                       square_side: 1201, longitude: -43, latitude: -22)
-    }
+    end
 
     before do
       expect(loader).to receive(:load_tile).with(filename).and_return(tile_data)
@@ -49,8 +49,8 @@ describe SuchGreatHeights::SrtmTile do
   end
 
   def raw_data
-    @raw_data ||= Array.new(1201) {
+    @raw_data ||= Array.new(1201) do
       Array.new(1201) { generate(:integer, min: 0, max: 300) }
-    }
+    end
   end
 end

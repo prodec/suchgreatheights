@@ -45,10 +45,10 @@ module SuchGreatHeights
     end
 
     def params_from_query
-      (request.query_string || "").split("&").map { |kv|
+      (request.query_string || "").split("&").map do |kv|
         k, v = kv.split("=")
         [CGI.unescape(k), CGI.unescape(v)] if k && v
-      }.compact.to_h
+      end.compact.to_h
     end
 
     def params_from_body

@@ -12,16 +12,16 @@ describe SuchGreatHeights::HttpHandler do
       let(:response) { SuchGreatHeights::AltitudeResponse.new(1337) }
 
       describe "from query string" do
-        let(:request) {
+        let(:request) do
           double("request", method: "GET", path: "/altitude", query_string: query_string)
-        }
+        end
 
         describe "with all arguments" do
           let(:query_string) { "lat=-22.123&lon=-43.456" }
 
           it "responds with altitude as JSON" do
             expect(service).to receive(:altitude_for).with(-43.456, -22.123)
-                                .and_return(response)
+              .and_return(response)
             expect(request).to receive(:respond).with(:ok, response.to_json)
 
             subject.response
@@ -70,14 +70,14 @@ describe SuchGreatHeights::HttpHandler do
       let(:response) { SuchGreatHeights::ProfileResponse.new([13, 37]) }
 
       describe "from query string" do
-        let(:request) {
+        let(:request) do
           double(:request, method: "GET", path: "/profile", query_string: query_string)
-        }
+        end
 
         describe "with all arguments" do
-          let(:query_string) {
+          let(:query_string) do
             "route=#{CGI.escape('[[-44.123,-22.456],[-45.123,-23.456]]')}"
-          }
+          end
 
           it "responds with a route profile as JSON" do
             expect(service).to receive(:route_profile)
@@ -115,13 +115,12 @@ describe SuchGreatHeights::HttpHandler do
         let(:body) { geo_json.to_json }
 
         describe "with a well-formed request" do
-          let(:geo_json) {
+          let(:geo_json) do
             {
               "type" => "LineString",
               "coordinates" => [[-44.123, -22.456], [-45.123, -23.456]]
             }
-          }
-
+          end
 
           it "responds with a route profile as JSON" do
             expect(service).to receive(:route_profile)

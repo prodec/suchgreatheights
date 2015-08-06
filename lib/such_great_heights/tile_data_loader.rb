@@ -45,11 +45,11 @@ module SuchGreatHeights
     end
 
     def read_data(contents, square_side)
-      square_side.times.map { |i|
+      square_side.times.map do |i|
         offset = CHUNK_SIZE * square_side
         buffer = contents[i * offset, offset]
         buffer.unpack("#{PACKING}*")
-      }
+      end
     end
   end
 end
