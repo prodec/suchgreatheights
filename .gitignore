@@ -3,3 +3,4 @@
 .ruby-version
 suchgreatheights.yml
 data/*
+*.log

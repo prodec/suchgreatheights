@@ -1,3 +1,4 @@
 ---
 tile_set_path: /path/to/tile_set
 tile_duration: 21600
+log_path: log/suchgreatheights.log
