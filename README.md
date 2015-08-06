@@ -18,12 +18,14 @@ O serviço abrirá na porta 7331, e responderá tanto por WebSocket quanto por H
 
 ### HTTP
 
+#### JSON de Altitude
   - **[GET]**: `/altitude?lat=<float>&lng=<float>` - retorna JSON com a estrutura
 
 ```
 { altitude: <float> }
 ```
 
+#### JSON de Perfil
   - **[GET]**: `/profile?route=<json array>` - retorna JSON com a seguinte estrutura
 
 ```
@@ -64,10 +66,10 @@ $ curl -XGET http://localhost:7331/profile?route="[[-43.114,-22.321],[-43.124,-2
 
   - Buscando altitude de um ponto
     - Payload: `{ "command": "point_altitude", "lat": <float>, "lng": <float> }`
-    - Resposta: Ver HTTP
+    - Resposta: [Ver HTTP](#json-de-altitude)
   - Buscando perfil de uma rota
     - Payload: `{ "command": "route_profile", "route": <LineString GeoJSON> }`
-    - Resposta: Ver HTTP
+    - Resposta: [Ver HTTP](#json-de-perfil)
 
 ## Arquitetura atual
 
