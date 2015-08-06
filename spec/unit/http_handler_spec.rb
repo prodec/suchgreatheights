@@ -17,7 +17,7 @@ describe SuchGreatHeights::HttpHandler do
         end
 
         describe "with all arguments" do
-          let(:query_string) { "lat=-22.123&lon=-43.456" }
+          let(:query_string) { "lat=-22.123&lng=-43.456" }
 
           it "responds with altitude as JSON" do
             expect(service).to receive(:altitude_for).with(-43.456, -22.123)
@@ -43,7 +43,7 @@ describe SuchGreatHeights::HttpHandler do
         let(:request) { double(:request, method: "POST", path: "/altitude", body: body) }
 
         describe "with a well-formed request" do
-          let(:body) { { lon: -43.456, lat: -22.123 }.to_json }
+          let(:body) { { lng: -43.456, lat: -22.123 }.to_json }
 
           it "responds with altitude as JSON" do
             expect(service).to receive(:altitude_for).with(-43.456, -22.123)

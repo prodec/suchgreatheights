@@ -4,7 +4,7 @@ Este serviço provê conversão de posições no mundo para altitudes retiradas 
 
 Há dois pontos de entrada, apenas:
 
-- `point_altitude(lon, lat)`: recebe longitude e latitude como Floats e retorna a altitude
+- `point_altitude(lng, lat)`: recebe longitude e latitude como Floats e retorna a altitude
 - `route_profile(route)`: recebe uma rota como LineString GeoJSON e retorna uma altitude para cada ponto
 
 ## Rodando
@@ -18,7 +18,7 @@ O serviço abrirá na porta 7331, e responderá tanto por WebSocket quanto por H
 
 ### HTTP
 
-  - **[GET]**: `/altitude?lat=<float>&lon=<float>` - retorna JSON com a estrutura
+  - **[GET]**: `/altitude?lat=<float>&lng=<float>` - retorna JSON com a estrutura
 
 ```
 { altitude: <float> }
@@ -41,7 +41,7 @@ O serviço abrirá na porta 7331, e responderá tanto por WebSocket quanto por H
   - Buscando altitude de um ponto (GET)
 
 ```
-$ curl -XGET http://localhost:7331/altitude\?lon\=-42.123123\&lat\=-21.98888
+$ curl -XGET http://localhost:7331/altitude\?lng\=-42.123123\&lat\=-21.98888
 {"altitude":287}
 ```
 
@@ -63,7 +63,7 @@ $ curl -XGET http://localhost:7331/profile?route="[[-43.114,-22.321],[-43.124,-2
 ### WebSocket
 
   - Buscando altitude de um ponto
-    - Payload: `{ "command": "point_altitude", "lat": <float>, "lon": <float> }`
+    - Payload: `{ "command": "point_altitude", "lat": <float>, "lng": <float> }`
     - Resposta: Ver HTTP
   - Buscando perfil de uma rota
     - Payload: `{ "command": "route_profile", "route": <LineString GeoJSON> }`

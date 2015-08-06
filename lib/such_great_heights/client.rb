@@ -31,7 +31,7 @@ module SuchGreatHeights
     def execute_command(command)
       case command["command"]
       when "point_altitude"
-        point_altitude(command["lon"], command["lat"])
+        point_altitude(command["lng"], command["lat"])
       when "route_profile"
         route_profile(command["route"])
       end

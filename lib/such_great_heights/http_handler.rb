@@ -22,7 +22,7 @@ module SuchGreatHeights
     def build_response
       case request.path
       when "/altitude"
-        service.altitude_for(Float(params["lon"]), Float(params["lat"]))
+        service.altitude_for(Float(params["lng"]), Float(params["lat"]))
       when "/profile"
         service.route_profile(route_from_params)
       end
