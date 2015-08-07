@@ -44,7 +44,7 @@ module SuchGreatHeights
         client_sent_at: request["sent_at"],
         response: request.fetch("command"),
         data: yield,
-        processed_at: Time.now.to_i * 1000
+        processed_at: (Time.now.to_f * 1000).to_i
       }
 
       connection << response.to_json
