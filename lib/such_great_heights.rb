@@ -7,6 +7,7 @@ module SuchGreatHeights
 end
 
 require_relative "such_great_heights/configuration"
+require_relative "such_great_heights/commands"
 require_relative "such_great_heights/errors"
 require_relative "such_great_heights/geometry"
 require_relative "such_great_heights/srtm_conversions"
@@ -27,3 +28,4 @@ require_relative "such_great_heights/service_supervision_group"
 
 require_relative "such_great_heights/server"
 require_relative "such_great_heights/client"
+require_relative "such_great_heights/client_socket_listener"

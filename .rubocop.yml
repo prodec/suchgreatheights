@@ -1,8 +1,4 @@
 AllCops:
-  RunRailsCops: true
-  Include:
-    - "**/Rakefile"
-    - "**/config.ru"
   Exclude:
     - "Gemfile"
     - "db/**/*"
