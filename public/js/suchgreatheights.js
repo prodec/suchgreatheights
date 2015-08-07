@@ -57,7 +57,7 @@ function initialize() {
 
   map = new google.maps.Map(document.getElementById('map-canvas'),
                             mapOptions);
-  google.maps.event.addListener(map, "mousemove", requestAltitude);
+  google.maps.event.addListener(map, "mousemove", requestAltitude());
 
   drawRoute(map);
   drawInterpolation(map);
@@ -100,18 +100,28 @@ function dispatch(resp) {
   }
 }
 
-function requestAltitude(me) {
-  var latLng = me.latLng;
+function requestAltitude() {
+  var lastSent;
 
-  connection.send(JSON.stringify({
-    command: "point_altitude",
-    lat: latLng.lat(),
-    lon: latLng.lng()
-  }));
+  return function(me) {
+    var latLng = me.latLng,
+        now = new Date;
+
+    if (!lastSent || (now - lastSent) > 40) {
+      connection.send(JSON.stringify({
+        command: "point_altitude",
+        lat: latLng.lat(),
+        lng: latLng.lng(),
+        sent_at: +new Date
+      }));
+
+      lastSent = now;
+    }
+  }
 }
 
 function displayAltitude(result) {
-  document.getElementById("current-altitude").innerText = result.altitude;
+  document.getElementById("current-altitude").innerText = result.data.altitude;
 }
 
 function displayRoute(resp) {

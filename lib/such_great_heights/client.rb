@@ -4,43 +4,67 @@ module SuchGreatHeights
   class Client
     include Celluloid
 
+    MALFORMED_REQUEST = {
+      response: "error",
+      data: { message: "You've sent a malformed request" }
+    }
+
+    UNKNOWN_COMMAND = {
+      response: "error",
+      data: { message: "Unknown command." }
+    }
+
+    START_LISTENER = lambda do |client, connection|
+      ClientSocketListener.new_link(client, connection)
+    end
+
     def initialize(connection, service)
       @connection = connection
       @service    = service
-
-      async.listen
+      @listener   = if block_given?
+                      yield Actor.current, connection
+                    else
+                      START_LISTENER.call(Actor.current, connection)
+                    end
     end
 
     attr_reader :service, :connection
     private :service, :connection
 
-    def listen
-      loop do
-        execute_command(next_command)
+    def process_request(request)
+      send_response(request) do
+        prepare_response(request)
       end
     end
 
-    def point_altitude(lon, lat)
-      connection << service.altitude_for(lon, lat).to_json
+    private
+
+    def send_response(request)
+      response = {
+        client_sent_at: request["sent_at"],
+        response: request.fetch("command"),
+        data: yield,
+        processed_at: Time.now.to_i * 1000
+      }
+
+      connection << response.to_json
     end
 
-    def route_profile(route)
-      connection << service.route_profile(route).to_json
-    end
+    def prepare_response(request)
+      payload = request["payload"]
 
-    def execute_command(command)
-      case command["command"]
-      when "point_altitude"
-        point_altitude(command["lng"], command["lat"])
-      when "route_profile"
-        route_profile(command["route"])
+      case request.fetch("command")
+      when Commands::POINT_ALTITUDE
+        service.altitude_for(payload.fetch("lng"), payload.fetch("lat"))
+      when Commands::ROUTE_PROFILE
+        service.route_profile(payload.fetch("route"))
+      when Commands::HEARTBEAT
+        nil
+      else
+        UNKNOWN_COMMAND
       end
-    end
-
-    def next_command
-      JSON.parse(connection.read)
-    rescue JSON::ParserError
-      {}
+    rescue KeyError, NameError
+      MALFORMED_REQUEST
     end
   end
 end
