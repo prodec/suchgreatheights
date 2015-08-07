@@ -18,6 +18,9 @@ module SuchGreatHeights
       loop do
         client.async.process_request(next_command)
       end
+    rescue IOError
+      client.async.disconnect
+      terminate
     end
 
     def next_command

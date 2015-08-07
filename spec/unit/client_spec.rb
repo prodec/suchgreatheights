@@ -15,7 +15,7 @@ end
 describe SuchGreatHeights::Client do
   let(:listener) { instance_double("ClientSocketListener") }
   let(:service) { instance_double("Service") }
-  let(:connection) { double("connection") }
+  let(:connection) { double("connection", remote_ip: "1.2.3.4") }
 
   subject do
     SuchGreatHeights::Client.new(connection, service) do |_|

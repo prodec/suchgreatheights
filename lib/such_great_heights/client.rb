@@ -3,6 +3,7 @@ require "celluloid"
 module SuchGreatHeights
   class Client
     include Celluloid
+    include Celluloid::Notifications
 
     MALFORMED_REQUEST = {
       response: "error",
@@ -21,20 +22,28 @@ module SuchGreatHeights
     def initialize(connection, service)
       @connection = connection
       @service    = service
+      @client_ip  = connection.remote_ip
       @listener   = if block_given?
                       yield Actor.current, connection
                     else
                       START_LISTENER.call(Actor.current, connection)
                     end
+
+      log_connection
     end
 
-    attr_reader :service, :connection
-    private :service, :connection
+    attr_reader :service, :connection, :client_ip
+    private :service, :connection, :client_ip
 
     def process_request(request)
       send_response(request) do
         prepare_response(request)
       end
+    end
+
+    def disconnect
+      log_disconnection
+      terminate
     end
 
     private
@@ -65,6 +74,14 @@ module SuchGreatHeights
       end
     rescue KeyError, NameError
       MALFORMED_REQUEST
+    end
+
+    def log_connection
+      publish(ServiceLogger::EVENT, "Client connected (IP: #{client_ip})")
+    end
+
+    def log_disconnection
+      publish(ServiceLogger::EVENT, "Client disconnected (IP: #{client_ip})")
     end
   end
 end

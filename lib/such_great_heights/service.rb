@@ -13,14 +13,10 @@ module SuchGreatHeights
     private :tile_cache
 
     def altitude_for(lon, lat)
-      publish(ServiceLogger::EVENT, "altitude_for(#{lon}, #{lat})")
-
       AltitudeResponse.new(altitude(lon, lat))
     end
 
     def route_profile(route)
-      publish(ServiceLogger::EVENT, "route_profile")
-
       coordinates = Geometry.interpolate_route(as_vertices(route.fetch("coordinates")))
 
       ProfileResponse.new(Array(coordinates).map do |p|

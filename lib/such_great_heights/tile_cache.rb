@@ -2,6 +2,7 @@ module SuchGreatHeights
   class TileCache
     include SrtmConversions
     include Celluloid
+    include Celluloid::Notifications
 
     FROM_CONFIG = ->(key) { Configuration.current.public_send(key) }
 
@@ -30,10 +31,14 @@ module SuchGreatHeights
     private
 
     def load_tile(tile_name)
+      publish(ServiceLogger::EVENT, "Loading tile: #{tile_name}")
+
       loader.load(File.join(tile_set, tile_name))
     end
 
     def unload_tile(tile_name)
+      publish(ServiceLogger::EVENT, "Unloading tile: #{tile_name}")
+
       cache.delete(tile_name)
     end
 
