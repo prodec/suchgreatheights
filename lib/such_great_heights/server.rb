@@ -11,6 +11,8 @@ module SuchGreatHeights
       @clients = []
 
       ServiceSupervisionGroup.run!
+
+      Celluloid.logger = Configuration.current.logger
     end
 
     private
