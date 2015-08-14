@@ -27,8 +27,8 @@ module SuchGreatHeights
     # Builds the profile for a given route, interpolating points along
     # the way in order to avoid abrupt changes in height. The
     # resolution of interpolation is determined by the max_dist
-    # parameter (i.e. the lower it is, the more points you potentially
-    # have).
+    # parameter (i.e. the higher it is, the more points you
+    # potentially have).
     #
     # @param route [Hash] a GeoJSON LineString
     # @param max_dist [Float] the maximum distance between points, in
