@@ -1,17 +1,30 @@
 require "forwardable"
 
 module SuchGreatHeights
-  Position = Struct.new(:x, :y, :z)
-
+  # Represents a well-formed SRTM data tile, either in SRTM1 or SRTM3
+  # format.
   class SrtmTile
     extend Forwardable
 
-    def initialize(zipfile, data_loader: TileDataLoader)
-      @tile_data = data_loader.load_tile(zipfile)
+    # @param zipfile_path [String] The path to a zipfile with SRTM
+    #   data (with the .hgt.zip extension)
+    def initialize(zipfile_path, data_loader: TileDataLoader)
+      @tile_data = data_loader.load_tile(zipfile_path)
     end
 
+    # @!method data
+    # @!method latitude
+    # @!method longitude
+    # @!method filename
+    # @!method square_side
     def_delegators :@tile_data, :data, :latitude, :longitude, :filename, :square_side
 
+    # Fetches an altitude for a given coordinate pair.
+    #
+    # @param lon [Float] a longitude
+    # @param lat [Float] a latitude
+    # @raise [OutOfBoundsError] if the pair is not in the tile
+    # @return [Fixnum] an altitude (in meters)
     def altitude_for(lon, lat)
       return NO_DATA if !lon || !lat
 
@@ -20,24 +33,6 @@ module SuchGreatHeights
       fail OutOfBoundsError if row < 0 || col < 0
 
       data[row][col]
-    end
-
-    def positions
-      data.flat_map.with_index do |row, i|
-        row.map.with_index do |alt, j|
-          lon, lat = lon_lat_from_cell(i, j)
-
-          Position.new(lon, lat, alt)
-        end
-      end
-    end
-
-    def to_s
-      "<<SRTM>>"
-    end
-
-    def inspect
-      "<<SRTM>>"
     end
 
     private

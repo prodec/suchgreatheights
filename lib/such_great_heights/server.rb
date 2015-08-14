@@ -2,9 +2,13 @@ require "reel"
 require "yaml"
 
 module SuchGreatHeights
+  # Receives connections from HTTP clients and either promotes them to
+  # WebSocket clients or responds directly.
   class Server < Reel::Server::HTTP
     trap_exit :client_disconnected
 
+    # @param host [String] the hostname to which to bind
+    # @param port [Fixnum] the port to which to bind
     def initialize(host = "0.0.0.0", port = 7331)
       super host, port, &method(:on_connection)
 

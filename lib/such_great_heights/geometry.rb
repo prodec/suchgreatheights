@@ -29,10 +29,11 @@ module SuchGreatHeights
     # Adds points to a LineString to improve a Profile's resolution.
     #
     # @param coords [Array<Vector>] a set of pairs of coordinates
-    # @param max_dist [Float] the maximum distance between points (defaults to 100km)
+    # @param max_dist [Float] the maximum distance between points,
+    #   in kilometers
     #
     # @return [Array<Vector>] a new route
-    def interpolate_route(coords, max_dist = 100)
+    def interpolate_route(coords, max_dist = 100.0)
       return coords if max_dist <= 0
 
       length  = line_length(coords)

@@ -1,7 +1,13 @@
 require "cgi"
 
 module SuchGreatHeights
+  # Handles requests to the [Service] coming from HTTP clients.
+  #
+  # @attr request [Reel:Request]
+  # @attr service [Service]
   class HttpHandler
+    # @param request [Reel::Request] the request
+    # @param service [Service] the altitude service
     def initialize(request, service)
       @request = request
       @service = service
@@ -9,6 +15,9 @@ module SuchGreatHeights
 
     attr_reader :request, :service
 
+    # Builds a response and sends it back to the client.
+    #
+    # @return [nil]
     def response
       request.respond(:ok, build_response.to_json)
     rescue TypeError, KeyError, JSON::ParserError

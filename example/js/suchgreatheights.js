@@ -1,4 +1,4 @@
-var connection = new WebSocket("ws://localhost:7331");
+var connection = new WebSocket("ws://suchgreatheights.sigvia.com");
 var lineString = [
   [-44.231, -21.231],
   [-43.231, -22.231]

@@ -1,12 +1,15 @@
 require "zip"
 
 module SuchGreatHeights
+  # Loads zipped SRTM data tiles from disk, converting their
+  # big-endian representation to little endian.
   class TileDataLoader
     PACKING    = "s>"
     CHUNK_SIZE = [1].pack(PACKING).size
 
     include SrtmConversions
 
+    # @param zipfile [String] a path to a zip file with SRTM data
     def initialize(zipfile)
       @zipfile  = zipfile
       @filename = File.basename(zipfile.sub(".zip", ""))
@@ -15,6 +18,9 @@ module SuchGreatHeights
     attr_reader :filename, :tempfile, :square_side, :zipfile
     private :filename, :tempfile, :square_side, :zipfile
 
+    # Loads the zipfile to memory.
+    #
+    # @return [TileData]
     def load
       with_unzipped_file do |uzf|
         square_side = Math.sqrt(uzf.length / 2).to_i
@@ -26,6 +32,10 @@ module SuchGreatHeights
       end
     end
 
+    # Loads a zipfile to memory.
+    #
+    # @param zipfile [String] a path to a zip file with SRTM data
+    # @return [TileData]
     def self.load_tile(zipfile)
       new(zipfile).load
     end

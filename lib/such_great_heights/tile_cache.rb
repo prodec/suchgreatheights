@@ -1,4 +1,6 @@
 module SuchGreatHeights
+  # Loads and unloads tiles from disk, keeping them in memory for the
+  # duration specified in Configuration#tile_duration.
   class TileCache
     include SrtmConversions
     include Celluloid
@@ -6,6 +8,10 @@ module SuchGreatHeights
 
     FROM_CONFIG = ->(key) { Configuration.current.public_send(key) }
 
+    # @param tile_set [String] path to the tile set (defaults to
+    #   Configuration.current.tile_set_path)
+    # @param tile_duration [String] how long to keep the tile in memory,
+    #   in seconds (defaults to Configuration.current.tile_set_path)
     def initialize(tile_set: FROM_CONFIG[:tile_set_path],
                    tile_duration: FROM_CONFIG[:tile_duration],
                    tile_loader: TileLoader)
@@ -19,6 +25,11 @@ module SuchGreatHeights
     attr_reader :cache, :loader, :tile_set, :tile_duration, :timers
     private :cache, :loader, :tile_set, :tile_duration, :timers
 
+    # Fetches a tile at a given coordinate pair.
+    #
+    # @param lon [Float] a longitude
+    # @param lat [Float] a latitude
+    # @return [SrtmTile] a tile
     def fetch(lon, lat)
       tn   = lon_lat_to_tile(lon, lat)
       tile = cache.fetch(tn) { cache[tn] = load_tile(tn) }

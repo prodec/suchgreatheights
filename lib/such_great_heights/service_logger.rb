@@ -1,6 +1,8 @@
 require_relative "configuration"
 
 module SuchGreatHeights
+  # Listens to events sent on the "new_request" channel and logs them
+  # to file.
   class ServiceLogger
     include Celluloid
     include Celluloid::Notifications
@@ -15,6 +17,8 @@ module SuchGreatHeights
 
     attr_reader :logger
     private :logger
+
+    private
 
     def event(_, message)
       logger.debug(message)

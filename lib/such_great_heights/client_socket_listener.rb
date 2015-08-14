@@ -1,9 +1,13 @@
 require "celluloid"
 
 module SuchGreatHeights
+  # An Actor that reads from the connection and passes parsed commands
+  # up to its owning Client.
   class ClientSocketListener
     include Celluloid
 
+    # @param client [Client] the Client who owns this listener
+    # @param connection [#read] the WebSocket connection
     def initialize(client, connection)
       @client     = client
       @connection = connection
@@ -13,6 +17,8 @@ module SuchGreatHeights
 
     attr_reader :client, :connection
     private :client, :connection
+
+    private
 
     def listen
       loop do

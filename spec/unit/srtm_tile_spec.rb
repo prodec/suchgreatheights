@@ -28,14 +28,6 @@ describe SuchGreatHeights::SrtmTile do
       expect(loader).to receive(:load_tile).with(filename).and_return(tile_data)
     end
 
-    describe "#positions" do
-      it "builds every position based on the Tile's source resolution" do
-        positions = subject.positions
-        expect(positions.size).to eq(1201**2)
-        expect(positions.all? { |p| p.x <= -42 && p.y >= -22 }).to be(true)
-      end
-    end
-
     describe "#altitude_for" do
       generative do
         data(:longitude) { generate(:longitude, base: -43) }
