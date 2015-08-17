@@ -31,12 +31,12 @@ module SuchGreatHeights
     # potentially have).
     #
     # @param route [Hash] a GeoJSON LineString
-    # @param max_dist [Float] the maximum distance between points, in
-    #   kilometers
+    # @param dist_factor [Float] the distance factor to use when
+    #   interpolating (the higher it is, the more points you get)
     # @return [ProfileResponse] a response
-    def route_profile(route, max_dist = 100.0)
+    def route_profile(route, dist_factor = 100.0)
       coordinates = Geometry.interpolate_route(as_vertices(route.fetch("coordinates")),
-                                               max_dist)
+                                               dist_factor)
 
       ProfileResponse.new(Array(coordinates).map do |p|
                             Point.new(p.x, p.y, altitude(p.x, p.y))
