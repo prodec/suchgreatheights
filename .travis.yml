@@ -5,3 +5,6 @@ rvm:
   - 2.2.3
 env:
   - GENERATIVE_COUNT: 100
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y libgeos-dev libproj-dev
