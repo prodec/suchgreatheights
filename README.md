@@ -1,32 +1,47 @@
-# suchgreatheights
+# such_great_heights
 
-Este serviço provê conversão de posições no mundo para altitudes retiradas dos arquivos gerados pela missão de topografia por radar da NASA, a [SRTM][srtm]. A qualidade dos resultados daqui depende, portanto, do que é oferecido por esses dados &mdash; no nosso caso, os arquivos da missão SRTM3, em que cada dado no arquivo binário abarca 3 arco-segundos de informação.
+This service provides fetching the altitudes for geographic pairs of coordinates using NASA's topography data ([read more about it][srtm]). It can serve both SRTM1 and SRTM3 data, and it's ready to be used both via HTTP and WebSockets.
 
-Há dois pontos de entrada, apenas:
+There's only two endpoints:
 
-- `point_altitude(lng, lat)`: recebe longitude e latitude como Floats e retorna a altitude
-- `route_profile(route)`: recebe uma rota como LineString GeoJSON e retorna uma altitude para cada ponto
+- `point_altitude(lng, lat)`: returns the altitude for a longitude and latitude pair
+- `route_profile(route)`: receives a route as a GeoJSON LineString and returns an altitude profile
 
-## Rodando
+## Running it
+
+The first thing you should do is download the data you need. There's many places on the Internet with SRTM tiles &mdash; such\_great\_heights was developed using those available here: [https://dds.cr.usgs.gov/srtm/](https://dds.cr.usgs.gov/srtm/). Copy everything you need to make available to a flat directory and create a `config/suchgreatheights.yml`, like this:
+
+    $ cd config
+    $ cp suchgreatheights.yml.sample suchgreatheights.yml
+
+Open your favorite editor and change the `tile_set_path` key to point to wherever your data is located. Ignore the other configuration options for now. You can now run it with the following steps:
 
     $ bundle install
     $ bin/server
 
-O serviço abrirá na porta 7331, e responderá tanto por WebSocket quanto por HTTP.
+The service will be bound to port 7331, and will be ready for HTTP and WebSocket clients.
 
-## Usando
+## Configuring it
+
+There are three configuration options:
+
+  - `tile_set_path`: the path to the directory with the tiles (in .hgt.zip format)
+  - `tile_duration`: how long to hold the tile in memory after it's been last accessed (defaults to 6h. See more in [Architecture](#architecture))
+  - `log_path`: the log file path (defaults to `log/suchgreatheights.log`)
+
+## Using it
 
 ### HTTP
 
-#### JSON de Altitude
-  - **[GET]**: `/altitude?lat=<float>&lng=<float>` - retorna JSON com a estrutura
+#### Fetching the altitude of a single point
+  - **[GET]**: `/altitude?lat=<float>&lng=<float>` - returns a JSON response with the structure below.
 
 ```
 { altitude: <float> }
 ```
 
-#### JSON de Perfil
-  - **[GET]**: `/profile?route=<json array>` - retorna JSON com a seguinte estrutura
+#### Fetching a route profile
+  - **[GET]**: `/profile?route=<json array>` - returns a JSON response with the structure below. `profile` is an Array of Arrays, each with three values (longitude, latitude and altitude/elevation).
 
 ```
 { profile: [[<float>, <float>, <float>]...]}
@@ -38,23 +53,23 @@ O serviço abrirá na porta 7331, e responderá tanto por WebSocket quanto por H
 { profile: [[<float>, <float>, <float>]...]}
 ```
 
-#### Exemplos
+#### Examples
 
-  - Buscando altitude de um ponto (GET)
+  - Fetching the altitude of a point (`GET`)
 
 ```
 $ curl -XGET http://localhost:7331/altitude\?lng\=-42.123123\&lat\=-21.98888
 {"altitude":287}
 ```
 
-  - Buscando perfil (GET)
+  - Fetching a route profile (`GET`)
 
 ```
 $ curl -XGET http://localhost:7331/profile?route="[[-43.114,-22.321],[-43.124,-22.331]]"
 {"profile":[[-43.114,-22.320999999999994,866],...]}
 ```
 
-  - Buscando perfil (POST)
+  - Fetching a route profile (`POST`)
 
 ```
 $ curl -XPOST -d '{"type": "LineString", "coordinates": [[-43.114,-22.321],[-43.124,-22.331]] }' http://localhost:7331/profile
@@ -64,32 +79,37 @@ $ curl -XGET http://localhost:7331/profile?route="[[-43.114,-22.321],[-43.124,-2
 
 ### WebSocket
 
-  - Buscando altitude de um ponto
+  - Fetching the altitude of a point:
     - Payload: `{ "command": "point_altitude", "sent_at": <timestamp>, "payload": { "lat": <float>, "lng": <float> } }`
-    - Resposta: `{ "response": "route_profile", "client_sent_at": <timestamp>, "processed_at": <timestamp>, "data": { "altitude": <number> } }` [Ver HTTP](#json-de-altitude)
-  - Buscando perfil de uma rota
+    - Response: `{ "response": "route_profile", "client_sent_at": <timestamp>, "processed_at": <timestamp>, "data": { "altitude": <number> } }`
+  - Fetching a route profile
     - Payload: `{ "command": "route_profile", "sent_at": <timestamp>, "payload": { "route": <LineString GeoJSON> } }`
-    - Resposta: `{ "response": "route_profile", "client_sent_at": <timestamp>, "processed_at": <timestamp>, "data": { "profile": <Ver HTTP> } }` ([Ver HTTP para formato do perfil](#json-de-perfil))
+    - Response: `{ "response": "route_profile", "client_sent_at": <timestamp>, "processed_at": <timestamp>, "data": { "profile": <Ver HTTP> } }`
   - *Heartbeat*
     - Payload: `{ "command": "ping", "sent_at": <timestamp> }`
-    - Resposta: `{ "response": "ping", "client_sent_at": <timestamp>, "processed_at": <timestamp> }`
+    - Response: `{ "response": "ping", "client_sent_at": <timestamp>, "processed_at": <timestamp> }`
 
-## Arquitetura atual
+WebSocket users should take care of sending a heartbeat every few seconds if they're running behind a proxy. [nginx][nginx], for instance, is very aggressive with idle connections and will kill them after about a minute.
 
-O projeto está sendo construído com uma avaliação gradual das necessidades de quem vai usá-lo. A princípio, o cliente é o [trail-blazer][trail-blazer], que apresenta dois casos de uso para isto:
+## Putting it in production
 
-- Observar a altitude sob o mouse, como referência para o planejamento;
-- Associar altitudes a rotas de planejamento, verificando assim se um plano de voo pode interceptar algum objeto (e se deve ser alterado para corrigir este fato).
+There's an Ansible Playbook ready to put it in production in an Ubuntu Server, behind an nginx instance. Tweak it to your needs.
 
-O uso sob mouse depende de latência, que ainda está por verificar. Por ora, todos os tiles são carregados sob demanda em memória. A carga inicial de um ladrilho leva ~175ms, e as chamadas subsequentes são respondidas em 5,8ns.
+## Architecture
 
-Foi feita uma tentativa de pré-carregar todos os ladrilhos da América do Sul, que rapidamente se mostrou proibitiva (abandonada depois de superar os 8GB de memória física). A carga sob demanda tenderá a cair no mesmo problema à medida que cresça o uptime da instância e a área de uso, mas a expectativa inicial é que, na prática, possamos ficar um bom tempo sem problemas por conta da área restrita de aplicação nos primeiros momentos.
+The project was conceived to have as few dependencies as possible, and the lowest latency as well. Its first client was an internal service used to plan drone flights that had as  requirements getting elevation updates on mouse move and evaluating of flight plans in relation to the elevation data (i.e. "will I hit something obvious?").
 
-Caso tenhamos problemas com isto, podemos partir para duas abordagens diferentes:
+Loading tiles takes about 175ms, and fetching altitudes about 5.8ns (it's basically an array access). There was an attempt at loading every single SRTM tile to memory, which proved prohibitive, so there were two choices (without accruing dependencies and/or changing latency requirements):
 
-1. R-Tree com processamento out-of-memory (que pode ser vantajoso com SSDs) ou
-2. PostGIS + nearest neighbor.
+- Confine ourselves to know flight areas and loading only those tiles;
+- Load tiles on demand.
+
+A choice was made to go with the latter. Tiles are loaded on demand and kept in memory only if they're accessed. If they're not, they get a grace period before being discarded (controlled by the `tile_duration` configuration option and defaulting to 6h). As of the writing of this paragraph (august 2015), it's working fine.
+
+### Celluloid
+
+Almost everything is an actor. The key structures &mdash; Service and TileCache &mdash; are behind a Supervision Group that takes care of restarting them if anything goes wrong. WebSocket Clients (also actors) will have to reconnect if anything happens (they just crash and burn if Service dies).
 
 
 [srtm]: http://www2.jpl.nasa.gov/srtm/
-[trail-blazer]: https://github.com/prodec/trail-blazer
+[nginx]: http://nginx.org/
