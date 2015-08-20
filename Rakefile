@@ -1,10 +1,15 @@
-require "benchmark"
-require "./lib/such_great_heights"
+begin
+  require "rspec/core/rake_task"
+  RSpec::Core::RakeTask.new(:spec)
+rescue LoadError
+end
 
 namespace :bench do
   task :tile_loading do
-    desc "Benchmarks loading tiles"
+    require "benchmark"
+    require "./lib/such_great_heights"
 
+    desc "Benchmarks loading tiles"
     Benchmark.bmbm do |x|
       x.report("tile_loading") do
         tile_path = File.expand_path("spec/assets/S22W043.hgt.zip", __dir__)
@@ -31,4 +36,4 @@ namespace :bench do
   end
 end
 
-task default: :bench
+task default: :spec
