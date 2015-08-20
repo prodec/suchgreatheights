@@ -18,4 +18,5 @@ group :test do
   gem "generative"
   gem "degenerate"
   gem "guard-rspec"
+  gem "codeclimate-test-reporter", require: false
 end

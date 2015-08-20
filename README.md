@@ -1,5 +1,7 @@
 # such_great_heights
 
+[![Code Climate](https://codeclimate.com/github/prodec/suchgreatheights/badges/gpa.svg)](https://codeclimate.com/github/prodec/suchgreatheights)
+
 This service provides fetching the altitudes for geographic pairs of coordinates using NASA's topography data ([read more about it][srtm]). It can serve both SRTM1 and SRTM3 data, and it's ready to be used both via HTTP and WebSockets.
 
 There's only two endpoints:
