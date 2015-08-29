@@ -7,4 +7,6 @@ env:
   - GENERATIVE_COUNT: 100
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -y libgeos-dev libproj-dev
+  - sudo apt-get install -y libgeos-dev libgeos-3.2.2 libproj-dev
+  - sudo ln -s /usr/lib/libgeos-3.2.2.so /usr/lib/libgeos.so
+  - sudo ln -s /usr/lib/libgeos-3.2.2.so /usr/lib/libgeos.so.1
