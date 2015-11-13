@@ -101,7 +101,7 @@ There's an Ansible Playbook ready to put it in production in an Ubuntu Server, b
 
 The project was conceived to have as few dependencies as possible, and the lowest latency as well. Its first client was an internal service used to plan drone flights that had as  requirements getting elevation updates on mouse move and evaluating of flight plans in relation to the elevation data (i.e. "will I hit something obvious?").
 
-Loading tiles takes about 175ms, and fetching altitudes about 5.8ns (it's basically an array access). There was an attempt at loading every single SRTM tile to memory, which proved prohibitive, so there were two choices (without accruing dependencies and/or changing latency requirements):
+Loading tiles takes about 175ms, and fetching altitudes about 50μs (it's basically an array access). There was an attempt at loading every single SRTM tile to memory, which proved prohibitive, so there were two choices (without accruing dependencies and/or changing latency requirements):
 
 - Confine ourselves to know flight areas and loading only those tiles;
 - Load tiles on demand.
