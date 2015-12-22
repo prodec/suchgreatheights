@@ -10,8 +10,8 @@ config_path: "{{shared_directory}}/config"
 tile_duration: 21600  
 
 ruby_tmp_dir: /usr/local/src
-ruby_url: http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.2.tar.gz
-ruby_file: ruby-2.2.2.tar.gz
-ruby_name: ruby-2.2.2
+ruby_url: http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.4.tar.gz
+ruby_file: ruby-2.2.4.tar.gz
+ruby_name: ruby-2.2.4
 tmp_ruby_path: "{{ruby_tmp_dir}}/{{ruby_name}}"
 
