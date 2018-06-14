@@ -54,7 +54,7 @@ module SuchGreatHeights
     end
 
     def as_vertices(coords)
-      coords.map { |c| Vector.new(*c) }
+      coords.map { |c| Vector.new(*c.first(2)) }
     end
   end
 end

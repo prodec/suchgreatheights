@@ -1,0 +1,12 @@
+[Unit]
+Description = suchgreatheights
+After = network.target
+
+[Service]
+WorkingDirectory = {{deploy_directory}}/current
+ExecStart = /usr/local/bin/bundle exec {{deploy_directory}}/current/bin/server
+User = deploy
+Group = deploy
+
+[Install]
+WantedBy = multi-user.target

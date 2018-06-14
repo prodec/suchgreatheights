@@ -1,5 +1,5 @@
 - name: "Install native dependencies"
-  action: apt pkg={{item}} state=installed
+  action: apt pkg={{item}} state=present
   with_items:
     - build-essential
     - automake

@@ -17,9 +17,9 @@
   file: path="{{deploy_directory}}/shared/config" owner=deploy group=deploy state=directory
 
 - name: Clone repo
-  git: repo=git@github.com:prodec/suchgreatheights.git
+  git: repo=https://github.com/prodec/suchgreatheights
        dest="{{deploy_directory}}/current"
-       version=master
+       version=master       
 
 - name: Fix permissions
   file: path={{deploy_directory}} owner=deploy group=deploy state=directory recurse=yes
@@ -42,12 +42,12 @@
 
 - name: Link log file
   file: src="{{log_file}}" dest="{{deploy_directory}}/current/log/suchgreatheights.log" state=link
-  
-- name: Copy upstart file
-  template: src=upstart.conf.j2 dest=/etc/init/{{app_name}}.conf force=yes
 
-- name: Restart service
-  service: name={{app_name}} state=restarted
+- name: Boot with suchgreatheights
+  template: src=suchgreatheights.service.j2 dest=/etc/systemd/system/suchgreatheights.service
+
+- name: Enable suchgreatheights
+  systemd: name=suchgreatheights enabled=yes state=started
 
 - name: Enable service at boot
   service: name={{app_name}} enabled=yes

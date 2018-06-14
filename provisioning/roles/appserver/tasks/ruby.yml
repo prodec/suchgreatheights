@@ -1,17 +1,11 @@
-- name: "ruby-from-src | ensure directory temporary ruby download directory is present"
-  file: state=directory path={{ruby_tmp_dir}}
+- name: "Add Ruby repository"
+  apt_repository: repo=ppa:brightbox/ruby-ng
 
-- name: "ruby-from-src | download ruby source"
-  get_url: url={{ruby_url}} dest={{ruby_tmp_dir}}
+- name: Install Ruby 2.5
+  apt: pkg=ruby2.5 state=latest update_cache=yes
 
-- name: "ruby-from-src | ensure ruby is extracted"
-  command: tar -xzf {{ruby_file}} chdir={{ruby_tmp_dir}} creates={{tmp_ruby_path}}
+- name: Install Ruby 2.5 dev package
+  apt: pkg=ruby2.5-dev state=latest
 
-- name: "ruby-from-src | ensure ruby is configured"
-  command: ./configure chdir={{tmp_ruby_path}} creates={{tmp_ruby_path}}/Makefile
-
-- name: "ruby-from-src | ensure ruby is compiled"
-  command: make chdir={{tmp_ruby_path}} creates={{tmp_ruby_path}}/ruby
-
-- name: "ruby-from-src | ensure ruby is installed"
-  command: make install chdir={{tmp_ruby_path}} creates=/usr/local/bin/ruby
+- name: Install bundler
+  command: gem install bundler
