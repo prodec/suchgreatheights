@@ -98,19 +98,19 @@ GEM
       http_parser.rb (>= 0.6.0)
       websocket-driver (>= 0.5.1)
     rgeo (1.0.0)
-    rspec (3.3.0)
-      rspec-core (~> 3.3.0)
-      rspec-expectations (~> 3.3.0)
-      rspec-mocks (~> 3.3.0)
-    rspec-core (3.3.2)
-      rspec-support (~> 3.3.0)
-    rspec-expectations (3.3.1)
+    rspec (3.7.0)
+      rspec-core (~> 3.7.0)
+      rspec-expectations (~> 3.7.0)
+      rspec-mocks (~> 3.7.0)
+    rspec-core (3.7.1)
+      rspec-support (~> 3.7.0)
+    rspec-expectations (3.7.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.3.0)
-    rspec-mocks (3.3.2)
+      rspec-support (~> 3.7.0)
+    rspec-mocks (3.7.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.3.0)
-    rspec-support (3.3.0)
+      rspec-support (~> 3.7.0)
+    rspec-support (3.7.1)
     ruby_dep (1.5.0)
     rubyzip (1.1.7)
     shellany (0.0.1)
@@ -149,11 +149,8 @@ DEPENDENCIES
   rake
   reel (~> 0.6.1)
   rgeo (~> 1.0.0)
-  rspec (~> 3.3.0)
+  rspec (~> 3.7.0)
   rubyzip (~> 1.1.7)
-
-RUBY VERSION
-   ruby 2.5.1p57
 
 BUNDLED WITH
    1.16.1
