@@ -1,11 +1,17 @@
+# frozen_string_literal: true
+
 require "cgi"
 
 module SuchGreatHeights
   # Handles requests to the [Service] coming from HTTP clients.
   #
-  # @attr request [Reel:Request]
+  # @attr request [Reel::Request]
   # @attr service [Service]
   class HttpHandler
+    DEFAULT_HEADERS = {
+      "Content-Type" => "application/json"
+    }.freeze
+
     # @param request [Reel::Request] the request
     # @param service [Service] the altitude service
     def initialize(request, service)
@@ -19,11 +25,12 @@ module SuchGreatHeights
     #
     # @return [nil]
     def response
-      request.respond(:ok, build_response.to_json)
+      request.respond(:ok, DEFAULT_HEADERS.dup, build_response.to_json)
     rescue TypeError, KeyError, JSON::ParserError
-      request.respond(400, "cannot process request. Check your arguments.")
+      request.respond(400, DEFAULT_HEADERS.dup,
+                      "Cannot process request. Check your arguments.")
     rescue => e
-      request.respond(500, e.message)
+      request.respond(500, DEFAULT_HEADERS.dup, e.message)
     end
 
     private

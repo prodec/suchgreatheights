@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 require "cgi"
@@ -5,6 +7,7 @@ require "cgi"
 describe SuchGreatHeights::HttpHandler do
   let(:service) { double("service") }
 
+  let(:headers) { described_class::DEFAULT_HEADERS }
   subject { SuchGreatHeights::HttpHandler.new(request, service) }
 
   describe "#response" do
@@ -21,8 +24,8 @@ describe SuchGreatHeights::HttpHandler do
 
           it "responds with altitude as JSON" do
             expect(service).to receive(:altitude_for).with(-43.456, -22.123)
-              .and_return(response)
-            expect(request).to receive(:respond).with(:ok, response.to_json)
+                                                     .and_return(response)
+            expect(request).to receive(:respond).with(:ok, headers, response.to_json)
 
             subject.response
           end
@@ -32,7 +35,7 @@ describe SuchGreatHeights::HttpHandler do
           let(:query_string) { "lat=-22.123" }
 
           it "responds with 400" do
-            expect(request).to receive(:respond).with(400, /check/i)
+            expect(request).to receive(:respond).with(400, headers, /check/i)
 
             subject.response
           end
@@ -47,8 +50,8 @@ describe SuchGreatHeights::HttpHandler do
 
           it "responds with altitude as JSON" do
             expect(service).to receive(:altitude_for).with(-43.456, -22.123)
-              .and_return(response)
-            expect(request).to receive(:respond).with(:ok, response.to_json)
+                                                     .and_return(response)
+            expect(request).to receive(:respond).with(:ok, headers, response.to_json)
 
             subject.response
           end
@@ -58,7 +61,7 @@ describe SuchGreatHeights::HttpHandler do
           let(:body) { "{ lat: " }
 
           it "responds with 400" do
-            expect(request).to receive(:respond).with(400, /check/i)
+            expect(request).to receive(:respond).with(400, headers, /check/i)
 
             subject.response
           end
@@ -83,7 +86,7 @@ describe SuchGreatHeights::HttpHandler do
             expect(service).to receive(:route_profile)
               .with("coordinates" => [[-44.123, -22.456], [-45.123, -23.456]])
               .and_return(response)
-            expect(request).to receive(:respond).with(:ok, response.to_json)
+            expect(request).to receive(:respond).with(:ok, headers, response.to_json)
 
             subject.response
           end
@@ -93,7 +96,7 @@ describe SuchGreatHeights::HttpHandler do
           let(:query_string) { "" }
 
           it "responds with 400" do
-            expect(request).to receive(:respond).with(400, /check/i)
+            expect(request).to receive(:respond).with(400, headers, /check/i)
 
             subject.response
           end
@@ -103,7 +106,7 @@ describe SuchGreatHeights::HttpHandler do
           let(:query_string) { "route=#{CGI.escape('[[-44.123, -22.456],')}" }
 
           it "responds with 400" do
-            expect(request).to receive(:respond).with(400, /check/i)
+            expect(request).to receive(:respond).with(400, headers, /check/i)
 
             subject.response
           end
@@ -125,7 +128,7 @@ describe SuchGreatHeights::HttpHandler do
           it "responds with a route profile as JSON" do
             expect(service).to receive(:route_profile)
               .with(geo_json).and_return(response)
-            expect(request).to receive(:respond).with(:ok, response.to_json)
+            expect(request).to receive(:respond).with(:ok, headers, response.to_json)
 
             subject.response
           end
@@ -135,7 +138,7 @@ describe SuchGreatHeights::HttpHandler do
           let(:geo_json) { {} }
 
           it "responds with 400" do
-            expect(request).to receive(:respond).with(400, /check/i)
+            expect(request).to receive(:respond).with(400, headers, /check/i)
             expect(service).to receive(:route_profile)
               .with({}).and_raise(KeyError)
 

@@ -8,6 +8,10 @@ AllCops:
 Style/BlockDelimiters:
   EnforcedStyle: line_count_based
 
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*_spec.rb"
+    
 Metrics/ClassLength:
   Max: 100
 
