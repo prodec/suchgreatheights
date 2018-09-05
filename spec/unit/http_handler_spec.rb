@@ -116,7 +116,7 @@ describe SuchGreatHeights::HttpHandler do
 
       describe "from request body" do
         let(:request) { double(:request, method: "POST", path: "/profile", body: body) }
-        let(:body) { geo_json.to_json }
+        let(:body) { { route: geo_json }.to_json }
 
         describe "with a well-formed request" do
           let(:geo_json) do

@@ -49,7 +49,7 @@ module SuchGreatHeights
       if request.method == "GET"
         { "coordinates" => JSON.load(params.fetch("route")) }
       else
-        params
+        params.fetch("route")
       end
     end
 
@@ -70,7 +70,7 @@ module SuchGreatHeights
 
     def params_from_body
       contents = request.body.to_s
-      JSON.load(contents.empty? ? "{}" : contents)
+      JSON.parse(contents.empty? ? "{}" : contents)
     end
   end
 end
