@@ -74,9 +74,14 @@ $ curl -XGET http://localhost:7331/profile?route="[[-43.114,-22.321],[-43.124,-2
   - Fetching a route profile (`POST`)
 
 ```
-$ curl -XPOST -d '{"type": "LineString", "coordinates": [[-43.114,-22.321],[-43.124,-22.331]] }' http://localhost:7331/profile
-$ curl -XGET http://localhost:7331/profile?route="[[-43.114,-22.321],[-43.124,-22.331]]"
+$ curl -XPOST -d '{ "route": {"type": "LineString", "coordinates": [[-43.114,-22.321],[-43.124,-22.331]] } }' http://localhost:7331/profile
 {"profile":[[-43.114,-22.320999999999994,866],...]}
+
+  - Fetching a route profile without interpolation (`POST`)
+
+```
+$ curl -XPOST -d '{ "interpolate": false, "route": {"type": "LineString", "coordinates": [[-43.114,-22.321],[-43.124,-22.331]] } }' http://localhost:7331/profile
+{"profile":[[-43.114,-22.321,1000],[-43.124,-22.331,2000]]}
 ```
 
 ### WebSocket
