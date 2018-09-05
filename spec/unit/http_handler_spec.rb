@@ -84,7 +84,8 @@ describe SuchGreatHeights::HttpHandler do
 
           it "responds with a route profile as JSON" do
             expect(service).to receive(:route_profile)
-              .with("coordinates" => [[-44.123, -22.456], [-45.123, -23.456]])
+              .with({ "coordinates" => [[-44.123, -22.456], [-45.123, -23.456]] },
+                    interpolate: true)
               .and_return(response)
             expect(request).to receive(:respond).with(:ok, headers, response.to_json)
 
@@ -127,7 +128,7 @@ describe SuchGreatHeights::HttpHandler do
 
           it "responds with a route profile as JSON" do
             expect(service).to receive(:route_profile)
-              .with(geo_json).and_return(response)
+              .with(geo_json, interpolate: true).and_return(response)
             expect(request).to receive(:respond).with(:ok, headers, response.to_json)
 
             subject.response
@@ -140,7 +141,7 @@ describe SuchGreatHeights::HttpHandler do
           it "responds with 400" do
             expect(request).to receive(:respond).with(400, headers, /check/i)
             expect(service).to receive(:route_profile)
-              .with({}).and_raise(KeyError)
+              .with({}, interpolate: true).and_raise(KeyError)
 
             subject.response
           end

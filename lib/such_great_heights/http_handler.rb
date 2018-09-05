@@ -40,7 +40,8 @@ module SuchGreatHeights
       when "/altitude"
         service.altitude_for(Float(params["lng"]), Float(params["lat"]))
       when "/profile"
-        service.route_profile(route_from_params)
+        service.route_profile(route_from_params,
+                              interpolate: params.fetch("interpolate", true))
       end
     end
 
